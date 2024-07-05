@@ -1,5 +1,6 @@
 package com.tinqinacademy.hotel.services_;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tinqinacademy.hotel.operations.createroom.CreateRoomInput;
 import com.tinqinacademy.hotel.operations.createroom.CreateRoomOutput;
 import com.tinqinacademy.hotel.operations.deleteroom.DeleteRoomInput;
@@ -13,6 +14,7 @@ import com.tinqinacademy.hotel.operations.registervisitor.RegisterVisitorInput;
 import com.tinqinacademy.hotel.operations.registervisitor.RegisterVisitorOutput;
 import com.tinqinacademy.hotel.operations.updateroom.UpdateRoomInput;
 import com.tinqinacademy.hotel.operations.updateroom.UpdateRoomOutput;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,10 @@ import java.util.List;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class SystemServiceImpl implements SystemService {
+    private final ObjectMapper objectMapper;
+
     @Override
     public RegisterVisitorOutput registerVisitor(RegisterVisitorInput input) {
         log.info("start registerVisitor input: {}", input);

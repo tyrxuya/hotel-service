@@ -30,7 +30,6 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class HotelController {
     private final HotelService hotelService;
-    private final ObjectMapper objectMapper;
 
     @GetMapping("/rooms")
     @Operation(
