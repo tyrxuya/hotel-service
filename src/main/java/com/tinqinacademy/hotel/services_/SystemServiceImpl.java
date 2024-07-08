@@ -26,7 +26,6 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class SystemServiceImpl implements SystemService {
-    private final ObjectMapper objectMapper;
 
     @Override
     public RegisterVisitorOutput registerVisitor(RegisterVisitorInput input) {

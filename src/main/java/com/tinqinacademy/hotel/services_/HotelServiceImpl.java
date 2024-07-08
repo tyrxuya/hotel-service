@@ -24,7 +24,6 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class HotelServiceImpl implements HotelService {
-    private final ObjectMapper objectMapper;
 
     @Override
     public CheckRoomsOutput checkRoomAvailability(CheckRoomsInput input) {

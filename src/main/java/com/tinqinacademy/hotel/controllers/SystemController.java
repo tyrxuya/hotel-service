@@ -1,5 +1,6 @@
 package com.tinqinacademy.hotel.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tinqinacademy.hotel.operations.createroom.CreateRoomInput;
 import com.tinqinacademy.hotel.operations.createroom.CreateRoomOutput;
 import com.tinqinacademy.hotel.operations.deleteroom.DeleteRoomInput;
@@ -32,6 +33,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class SystemController {
     private final SystemService systemService;
+    private final ObjectMapper objectMapper;
 
     @PostMapping("/register")
     @Operation(
