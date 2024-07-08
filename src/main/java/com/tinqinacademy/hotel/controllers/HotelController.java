@@ -41,11 +41,11 @@ public class HotelController {
             @ApiResponse(responseCode = "200", description = "ok"),
             @ApiResponse(responseCode = "400", description = "bad request")
     })
-    public ResponseEntity<CheckRoomsOutput> checkRoomAvailability(@RequestParam(required = false, value = "startDate") @Schema(example = "2021-05-22") LocalDate startDate,
-                                                                  @RequestParam(required = false, value = "endDate") @Schema(example = "2021-05-25") LocalDate endDate,
-                                                                  @RequestParam(required = false, value = "bedCount") @Schema(example = "2") Integer bedCount,
-                                                                  @RequestParam(required = false, value = "bedSize") @Schema(example = "kingSize") String bedSize,
-                                                                  @RequestParam(required = false, value = "bathroomType") @Schema(example = "private") String bathroomType) {
+    public ResponseEntity<CheckRoomsOutput> checkRoomAvailability(@RequestParam(required = false) @Schema(example = "2021-05-22") LocalDate startDate,
+                                                                  @RequestParam(required = false) @Schema(example = "2021-05-25") LocalDate endDate,
+                                                                  @RequestParam(required = false) @Schema(example = "2") Integer bedCount,
+                                                                  @RequestParam(required = false) @Schema(example = "kingSize") String bedSize,
+                                                                  @RequestParam(required = false) @Schema(example = "private") String bathroomType) {
         CheckRoomsInput input = CheckRoomsInput.builder()
                 .startDate(startDate)
                 .endDate(endDate)
