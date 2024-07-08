@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,7 @@ public class SystemController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<RegisterVisitorOutput> registerVisitor(@RequestBody RegisterVisitorInput input) {
+    public ResponseEntity<RegisterVisitorOutput> registerVisitor(@RequestBody @Valid RegisterVisitorInput input) {
         return new ResponseEntity<>(systemService.registerVisitor(input), HttpStatus.CREATED);
     }
 
@@ -97,7 +98,7 @@ public class SystemController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<CreateRoomOutput> createRoom(@RequestBody CreateRoomInput input) {
+    public ResponseEntity<CreateRoomOutput> createRoom(@RequestBody @Valid CreateRoomInput input) {
         return new ResponseEntity<>(systemService.createRoom(input), HttpStatus.CREATED);
     }
 
@@ -112,7 +113,7 @@ public class SystemController {
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
     public ResponseEntity<UpdateRoomOutput> updateRoom(@PathVariable @Schema(example = "15") String roomId,
-                                                       @RequestBody UpdateRoomInput input) {
+                                                       @RequestBody @Valid UpdateRoomInput input) {
         return new ResponseEntity<>(systemService.updateRoom(input), HttpStatus.OK);
     }
 
@@ -127,7 +128,7 @@ public class SystemController {
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
     public ResponseEntity<PartialUpdateRoomOutput> partialUpdateRoom(@PathVariable @Schema(example = "15") String roomId,
-                                                                     @RequestBody PartialUpdateRoomInput input) {
+                                                                     @RequestBody @Valid PartialUpdateRoomInput input) {
         return new ResponseEntity<>(systemService.partialUpdateRoom(input), HttpStatus.OK);
     }
 

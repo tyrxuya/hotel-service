@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -84,7 +85,7 @@ public class HotelController {
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
     public ResponseEntity<BookRoomOutput> bookRoom(@PathVariable @Schema(example = "15") String roomId,
-                                                   @RequestBody BookRoomInput input) {
+                                                   @RequestBody @Valid BookRoomInput input) {
         input = input.toBuilder()
                 .roomId(roomId)
                 .build();
