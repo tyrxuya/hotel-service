@@ -1,16 +1,18 @@
 package com.tinqinacademy.hotel.errorhandler;
 
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Component
 public class ErrorHandlerImpl implements ErrorHandler {
     @Override
-    public ErrorOutput handle(MethodArgumentNotValidException ex) {
+    public ErrorOutput handle(BindException ex) {
         List<Error> errors = new ArrayList<>();
 
         ex.getBindingResult()
