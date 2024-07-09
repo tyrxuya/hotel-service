@@ -36,6 +36,8 @@ public class PartialUpdateRoomInput {
     private String roomNo;
 
     @Schema(example = "1838124.15")
-    @Positive(message = "price cannot be negative")
+    //@Positive(message = "price cannot be negative")
+    @DecimalMin(value = "200", message = "price cannot be lower than 200")
+    @Digits(integer = 4, fraction = 2, message = "invalid price decimal")
     private BigDecimal price;
 }

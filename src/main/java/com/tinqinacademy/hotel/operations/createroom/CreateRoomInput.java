@@ -32,10 +32,12 @@ public class CreateRoomInput {
     private Integer floor;
 
     @Schema(example = "700b")
-    @NotBlank(message = "room number can't be blank")
+    @NotBlank(message = "room number cant be blank")
     private String roomNo;
 
     @Schema(example = "1838124.15")
-    @Positive(message = "price cannot be negative")
+    //@Positive(message = "price cannot be negative")
+    @DecimalMin(value = "200", message = "price cannot be lower than 200")
+    @Digits(integer = 4, fraction = 2, message = "invalid price decimal")
     private BigDecimal price;
 }

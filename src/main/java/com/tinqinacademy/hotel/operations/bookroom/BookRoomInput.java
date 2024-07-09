@@ -17,21 +17,21 @@ public class BookRoomInput {
     @JsonIgnore
     private String roomId;
 
-    @Schema(example = "2024-05-22")
+    @Schema(example = "2025-05-22")
     @PastOrPresent(message = "invalid startDate")
     private LocalDate startDate;
 
-    @Schema(example = "2024-05-25")
+    @Schema(example = "2025-05-25")
     @PastOrPresent(message = "invalid endDate")
     private LocalDate endDate;
 
     @Schema(example = "vanio")
-    @NotBlank(message = "firstName can't be blank")
+    @NotBlank(message = "firstName cant be blank")
     @Size(min = 2, max = 50, message = "firstName must be between 2 and 50 characters")
     private String firstName;
 
     @Schema(example = "georgiev")
-    @NotBlank(message = "lastName can't be blank")
+    @NotBlank(message = "lastName cant be blank")
     @Size(min = 2, max = 50, message = "lastName must be between 2 and 50 characters")
     private String lastName;
 

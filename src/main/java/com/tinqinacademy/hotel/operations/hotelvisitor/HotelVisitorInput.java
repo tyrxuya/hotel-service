@@ -13,21 +13,21 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class HotelVisitorInput {
-    @Schema(example = "2024-05-22")
+    @Schema(example = "2025-05-22")
     @FutureOrPresent(message = "invalid startDate")
     private LocalDate startDate;
 
-    @Schema(example = "2024-05-25")
-    @FutureOrPresent(message = "invalid endDate")
+    @Schema(example = "2025-05-25")
+    @Future(message = "invalid endDate")
     private LocalDate endDate;
 
     @Schema(example = "vanio")
-    @NotBlank(message = "firstName can't be blank")
+    @NotBlank(message = "firstName cant be blank")
     @Size(min = 2, max = 50, message = "firstName must be between 2 and 50 characters")
     private String firstName;
 
     @Schema(example = "georgiev")
-    @NotBlank(message = "lastName can't be blank")
+    @NotBlank(message = "lastName cant be blank")
     @Size(min = 2, max = 50, message = "lastName must be between 2 and 50 characters")
     private String lastName;
 
@@ -37,7 +37,7 @@ public class HotelVisitorInput {
     @Size(min = 10, max = 13, message = "phone number must be between 10 and 13 characters")
     private String phoneNo;
 
-    @Schema(example = "0349888888")
+    @Schema(example = "0349228888")
     @Pattern(regexp = "\\b[0-9]{2}(?:0[1-9]|1[0-2]|2[1-9]|3[0-2]|4[1-9]|5[0-2])(?:0[1-9]|[1-2][0-9]|3[0-1])[0-9]{4}\\b", message = "invalid civil id number")
     @NotBlank(message = "card id number cannot be blank")
     @Size(min = 10, max = 10, message = "card id number must be exactly 10 characters")
@@ -49,7 +49,7 @@ public class HotelVisitorInput {
     private String idIssueAuthority;
 
     @Schema(example = "2015-05-22")
-    @Past(message = "invalid id issue date")
+    @PastOrPresent(message = "invalid id issue date")
     private LocalDate idIssueDate;
 
     @Schema(example = "2027-12-12")
