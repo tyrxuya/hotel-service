@@ -1,6 +1,5 @@
 package com.tinqinacademy.hotel.services_;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tinqinacademy.hotel.operations.createroom.CreateRoomInput;
 import com.tinqinacademy.hotel.operations.createroom.CreateRoomOutput;
 import com.tinqinacademy.hotel.operations.deleteroom.DeleteRoomInput;

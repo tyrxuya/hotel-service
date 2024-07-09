@@ -1,10 +1,7 @@
 package com.tinqinacademy.hotel.errorhandler;
 
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.ArrayList;
 import java.util.List;
