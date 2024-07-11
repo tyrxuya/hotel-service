@@ -6,15 +6,12 @@
   <artifactId>core</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <licenses>
-    <license />
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
   </licenses>
   <dependencies>
-    <dependency>
-      <groupId>com.tinqinacademy</groupId>
-      <artifactId>persistence</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
     <dependency>
       <groupId>com.tinqinacademy</groupId>
       <artifactId>api</artifactId>

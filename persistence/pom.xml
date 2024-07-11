@@ -7,20 +7,14 @@
     <parent>
         <groupId>com.tinqinacademy</groupId>
         <artifactId>hotel</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
-
-    <version>0.0.1-SNAPSHOT</version>
-
-    <properties>
-        <java.version>21</java.version>
-    </properties>
 
     <dependencies>
         <dependency>
             <groupId>${group.id}</groupId>
-            <artifactId>api</artifactId>
-            <version>${module.version}</version>
+            <artifactId>domain</artifactId>
+            <version>${revision}</version>
         </dependency>
     </dependencies>
 
