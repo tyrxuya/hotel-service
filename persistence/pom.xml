@@ -12,7 +12,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>${group.id}</groupId>
+            <groupId>com.tinqinacademy</groupId>
             <artifactId>domain</artifactId>
             <version>${revision}</version>
         </dependency>

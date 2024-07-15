@@ -13,7 +13,7 @@ import java.util.List;
 @Component
 public class ErrorHandlerImpl implements ErrorHandler {
     @Override
-    public ErrorOutput handle(BindException ex) {
+    public ErrorOutput handle(Exception ex) {
         List<Error> errors = new ArrayList<>();
 
 //        Arrays.stream(ex.getSuppressed())
@@ -28,16 +28,28 @@ public class ErrorHandlerImpl implements ErrorHandler {
 //
         //BindException e = new BindException(ex, "ex");
 
-        ex.getBindingResult()
-                .getFieldErrors()
-                .forEach(error -> errors.add(
-                                Error.builder()
-                                        .message(error.getDefaultMessage())
-                                        .field(error.getField())
-                                        .errorCode(error.getCode())
-                                        .build()
-                        )
-                );
+        if (ex instanceof BindException bindException) {
+            bindException.getBindingResult()
+                    .getFieldErrors()
+                    .forEach(error -> errors.add(
+                                    Error.builder()
+                                            .message(error.getDefaultMessage())
+                                            .field(error.getField())
+                                            .errorCode(error.getCode())
+                                            .build()
+                            )
+                    );
+        }
+        else if (ex instanceof ConstraintViolationException constraintException) {
+            constraintException.getConstraintViolations()
+                    .forEach(error -> errors.add(
+                            Error.builder()
+                                    .message(error.getMessage())
+                                    .errorCode(error.getInvalidValue().toString())
+                                    .build()
+                            )
+                    );
+        }
 
         ErrorOutput errorOutput = ErrorOutput.builder()
                 .errors(errors)

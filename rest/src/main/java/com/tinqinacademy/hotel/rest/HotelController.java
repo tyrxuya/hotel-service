@@ -27,13 +27,12 @@ import java.time.LocalDate;
 
 @RestController
 @Tag(name = "Hotel REST APIs")
-@RequestMapping("/hotel")
 @RequiredArgsConstructor
 public class HotelController {
     private final HotelService hotelService;
     private final ObjectMapper objectMapper;
 
-    @GetMapping("/rooms")
+    @GetMapping(RestApiPaths.CHECK_ROOM)
     @Operation(
             summary = "Check room REST API",
             description = "Checks whether a room is available for a certain period."
@@ -54,10 +53,12 @@ public class HotelController {
                 .bedSize(BedSize.getBedSize(bedSize))
                 .bathroomType(BathroomType.getBathroomType(bathroomType))
                 .build();
-        return new ResponseEntity<>(hotelService.checkRoomAvailability(input), HttpStatus.OK);
+
+        CheckRoomsOutput result = hotelService.checkRoomAvailability(input);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/{roomId}")
+    @GetMapping(RestApiPaths.GET_ROOM_INFO)
     @Operation(
             summary = "Info room REST API",
             description = "Returns basic info for a room with a specified id."
@@ -71,10 +72,11 @@ public class HotelController {
                 .roomId(roomId)
                 .build();
 
-        return new ResponseEntity<>(hotelService.getRoomInfo(input), HttpStatus.OK);
+        GetRoomByIdOutput result = hotelService.getRoomInfo(input);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/{roomId}")
+    @PostMapping(RestApiPaths.BOOK_ROOM)
     @Operation(
             summary = "Book room REST API",
             description = "Books the room specified."
@@ -90,10 +92,11 @@ public class HotelController {
                 .roomId(roomId)
                 .build();
 
-        return new ResponseEntity<>(hotelService.bookRoom(input), HttpStatus.OK);
+        BookRoomOutput result = hotelService.bookRoom(input);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{bookingId}")
+    @DeleteMapping(RestApiPaths.UNBOOK_ROOM)
     @Operation(
             summary = "Unbook room REST API",
             description = "Unbooks a room that the user has already been booked."
@@ -108,6 +111,7 @@ public class HotelController {
                 .bookingId(bookingId)
                 .build();
 
-        return new ResponseEntity<>(hotelService.unbookRoom(input), HttpStatus.OK);
+        UnbookRoomOutput result = hotelService.unbookRoom(input);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

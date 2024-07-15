@@ -30,13 +30,12 @@ import java.time.LocalDate;
 
 @RestController
 @Tag(name = "System REST APIs")
-@RequestMapping("/system")
 @RequiredArgsConstructor
 public class SystemController {
     private final SystemService systemService;
     private final ObjectMapper objectMapper;
 
-    @PostMapping("/register")
+    @PostMapping(RestApiPaths.REGISTER_VISITOR)
     @Operation(
             summary = "Register visitor REST API",
             description = "Registers a visitor as room renter."
@@ -47,10 +46,11 @@ public class SystemController {
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
     public ResponseEntity<RegisterVisitorOutput> registerVisitor(@RequestBody @Valid RegisterVisitorInput input) {
-        return new ResponseEntity<>(systemService.registerVisitor(input), HttpStatus.CREATED);
+        RegisterVisitorOutput result = systemService.registerVisitor(input);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @GetMapping("/register")
+    @GetMapping(RestApiPaths.GET_VISITORS_INFO)
     @Operation(
             summary = "Info visitor REST API",
             description = "Provides a report based on various criteria. Provides info when room was occupied and by whom. Can report when a user has occupied rooms."
@@ -85,10 +85,11 @@ public class SystemController {
                 .visitor(visitor)
                 .build();
 
-        return new ResponseEntity<>(systemService.getVisitorsInfo(input), HttpStatus.OK);
+        GetRegisteredVisitorsOutput result = systemService.getVisitorsInfo(input);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/room")
+    @PostMapping(RestApiPaths.CREATE_ROOM)
     @Operation(
             summary = "Create room REST API",
             description = "Admin creates a new room with the specified parameters."
@@ -99,10 +100,11 @@ public class SystemController {
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
     public ResponseEntity<CreateRoomOutput> createRoom(@RequestBody @Valid CreateRoomInput input) {
-        return new ResponseEntity<>(systemService.createRoom(input), HttpStatus.CREATED);
+        CreateRoomOutput result = systemService.createRoom(input);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @PutMapping("/room/{roomId}")
+    @PutMapping(RestApiPaths.UPDATE_ROOM)
     @Operation(
             summary = "Update room REST API",
             description = "Admin updates the info regarding a certain room."
@@ -114,10 +116,11 @@ public class SystemController {
     })
     public ResponseEntity<UpdateRoomOutput> updateRoom(@PathVariable @Schema(example = "15") String roomId,
                                                        @RequestBody @Valid UpdateRoomInput input) {
-        return new ResponseEntity<>(systemService.updateRoom(input), HttpStatus.OK);
+        UpdateRoomOutput result = systemService.updateRoom(input);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PatchMapping("/room/{roomId}")
+    @PatchMapping(RestApiPaths.PARTIAL_UPDATE_ROOM)
     @Operation(
             summary = "Partially update room REST API",
             description = "Admin partial update of room data."
@@ -129,10 +132,11 @@ public class SystemController {
     })
     public ResponseEntity<PartialUpdateRoomOutput> partialUpdateRoom(@PathVariable @Schema(example = "15") String roomId,
                                                                      @RequestBody @Valid PartialUpdateRoomInput input) {
-        return new ResponseEntity<>(systemService.partialUpdateRoom(input), HttpStatus.OK);
+        PartialUpdateRoomOutput result = systemService.partialUpdateRoom(input);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @DeleteMapping("/room/{roomId}")
+    @DeleteMapping(RestApiPaths.DELETE_ROOM)
     @Operation(
             summary = "Delete room REST API",
             description = "Deletes a room."
@@ -147,6 +151,7 @@ public class SystemController {
                 .roomId(roomId)
                 .build();
 
-        return new ResponseEntity<>(systemService.deleteRoom(input), HttpStatus.OK);
+        DeleteRoomOutput result = systemService.deleteRoom(input);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
