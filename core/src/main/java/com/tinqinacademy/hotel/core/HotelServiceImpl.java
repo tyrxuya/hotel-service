@@ -1,8 +1,6 @@
 package com.tinqinacademy.hotel.core;
 
 import com.tinqinacademy.hotel.api.contracts.HotelService;
-import com.tinqinacademy.hotel.api.models.BathroomType;
-import com.tinqinacademy.hotel.api.models.BedSize;
 import com.tinqinacademy.hotel.api.operations.bookroom.BookRoomInput;
 import com.tinqinacademy.hotel.api.operations.bookroom.BookRoomOutput;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomsInput;
@@ -11,12 +9,12 @@ import com.tinqinacademy.hotel.api.operations.getroombyid.GetRoomByIdInput;
 import com.tinqinacademy.hotel.api.operations.getroombyid.GetRoomByIdOutput;
 import com.tinqinacademy.hotel.api.operations.unbookroom.UnbookRoomInput;
 import com.tinqinacademy.hotel.api.operations.unbookroom.UnbookRoomOutput;
+import com.tinqinacademy.hotel.persistence.contracts.*;
+import com.tinqinacademy.hotel.persistence.models.Room;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +22,11 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class HotelServiceImpl implements HotelService {
+    private final RoomRepository roomRepository;
+    private final BedRepository bedRepository;
+    private final BookingRepository bookingRepository;
+    private final GuestRepository guestRepository;
+    private final UserRepository userRepository;
 
     @Override
     public CheckRoomsOutput checkRoomAvailability(CheckRoomsInput input) {
@@ -47,22 +50,32 @@ public class HotelServiceImpl implements HotelService {
     public GetRoomByIdOutput getRoomInfo(GetRoomByIdInput input) {
         log.info("start getRoomInfo input: {}", input);
 
-        List<LocalDate> datesOccupied = new ArrayList<>();
-        datesOccupied.add(LocalDate.of(2020, 1, 1));
-        datesOccupied.add(LocalDate.of(2020, 1, 2));
-        datesOccupied.add(LocalDate.of(2020, 1, 3));
-        datesOccupied.add(LocalDate.of(2020, 1, 4));
-        datesOccupied.add(LocalDate.of(2020, 1, 5));
-        datesOccupied.add(LocalDate.of(2020, 1, 6));
+//        List<LocalDate> datesOccupied = new ArrayList<>();
+//        datesOccupied.add(LocalDate.of(2020, 1, 1));
+//        datesOccupied.add(LocalDate.of(2020, 1, 2));
+//        datesOccupied.add(LocalDate.of(2020, 1, 3));
+//        datesOccupied.add(LocalDate.of(2020, 1, 4));
+//        datesOccupied.add(LocalDate.of(2020, 1, 5));
+//        datesOccupied.add(LocalDate.of(2020, 1, 6));
+//
+//        GetRoomByIdOutput result = GetRoomByIdOutput.builder()
+//                .roomId(input.getRoomId())
+//                .price(BigDecimal.valueOf(123124))
+//                .floor(5)
+//                .bedSize(BedSize.getBedSize("kingSize"))
+//                .bathroomType(BathroomType.getBathroomType("private"))
+//                .bedCount(10)
+//                .datesOccupied(datesOccupied)
+//                .build();
+
+        Room room = roomRepository.findById(input.getRoomId())
+                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
 
         GetRoomByIdOutput result = GetRoomByIdOutput.builder()
-                .roomId(input.getRoomId())
-                .price(BigDecimal.valueOf(123124))
-                .floor(5)
-                .bedSize(BedSize.getBedSize("kingSize"))
-                .bathroomType(BathroomType.getBathroomType("private"))
-                .bedCount(10)
-                .datesOccupied(datesOccupied)
+                .roomId(room.getId())
+                .price(room.getPrice())
+                .floor(room.getFloor())
+                .bathroomType(room.getBathroomType())
                 .build();
 
         log.info("end getRoomInfo result: {}", result);

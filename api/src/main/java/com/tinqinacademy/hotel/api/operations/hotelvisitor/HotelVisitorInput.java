@@ -37,11 +37,13 @@ public class HotelVisitorInput {
     @Size(min = 10, max = 13, message = "phone number must be between 10 and 13 characters")
     private String phoneNo;
 
+    private LocalDate birthday;
+
     @Schema(example = "0349228888")
     @Pattern(regexp = "\\b[0-9]{2}(?:0[1-9]|1[0-2]|2[1-9]|3[0-2]|4[1-9]|5[0-2])(?:0[1-9]|[1-2][0-9]|3[0-1])[0-9]{4}\\b", message = "invalid civil id number")
     @NotBlank(message = "card id number cannot be blank")
     @Size(min = 10, max = 10, message = "card id number must be exactly 10 characters")
-    private String idNo;
+    private String civilNumber;
 
     @Schema(example = "mvr varna")
     @NotBlank(message = "issue authority cannot be null")

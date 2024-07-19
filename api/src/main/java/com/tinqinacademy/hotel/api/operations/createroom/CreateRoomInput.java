@@ -1,12 +1,13 @@
 package com.tinqinacademy.hotel.api.operations.createroom;
 
-import com.tinqinacademy.hotel.api.models.BathroomType;
-import com.tinqinacademy.hotel.api.models.BedSize;
+import com.tinqinacademy.hotel.persistence.enums.BathroomType;
+import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,11 +21,10 @@ public class CreateRoomInput {
     @Max(value = 10, message = "bedCount cannot be greater than 10")
     private Integer bedCount;
 
-    @Schema(example = "kingSize")
-    private BedSize bedSize;
+    private List<BedSize> bedSizes;
 
     @Schema(example = "shared")
-    private BathroomType bathroomType;
+    private String bathroomType;
 
     @Schema(example = "7")
     @Min(value = 1, message = "floor cannot be less than 1")

@@ -1,7 +1,7 @@
 package com.tinqinacademy.hotel.api.operations.checkrooms;
 
-import com.tinqinacademy.hotel.api.models.BathroomType;
-import com.tinqinacademy.hotel.api.models.BedSize;
+import com.tinqinacademy.hotel.persistence.enums.BathroomType;
+import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 

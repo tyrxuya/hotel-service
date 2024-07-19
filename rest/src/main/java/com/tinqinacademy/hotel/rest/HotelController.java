@@ -2,8 +2,8 @@ package com.tinqinacademy.hotel.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tinqinacademy.hotel.api.contracts.HotelService;
-import com.tinqinacademy.hotel.api.models.BathroomType;
-import com.tinqinacademy.hotel.api.models.BedSize;
+import com.tinqinacademy.hotel.persistence.enums.BathroomType;
+import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import com.tinqinacademy.hotel.api.operations.bookroom.BookRoomInput;
 import com.tinqinacademy.hotel.api.operations.bookroom.BookRoomOutput;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomsInput;
@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @RestController
 @Tag(name = "Hotel REST APIs")
@@ -69,7 +70,7 @@ public class HotelController {
     })
     public ResponseEntity<GetRoomByIdOutput> getRoomInfo(@PathVariable @Schema(example = "15") String roomId) {
         GetRoomByIdInput input = GetRoomByIdInput.builder()
-                .roomId(roomId)
+                .roomId(UUID.fromString(roomId))
                 .build();
 
         GetRoomByIdOutput result = hotelService.getRoomInfo(input);

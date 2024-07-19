@@ -14,6 +14,12 @@ import com.tinqinacademy.hotel.api.operations.registervisitor.RegisterVisitorInp
 import com.tinqinacademy.hotel.api.operations.registervisitor.RegisterVisitorOutput;
 import com.tinqinacademy.hotel.api.operations.updateroom.UpdateRoomInput;
 import com.tinqinacademy.hotel.api.operations.updateroom.UpdateRoomOutput;
+import com.tinqinacademy.hotel.persistence.contracts.*;
+import com.tinqinacademy.hotel.persistence.enums.BathroomType;
+import com.tinqinacademy.hotel.persistence.models.Bed;
+import com.tinqinacademy.hotel.persistence.models.Guest;
+import com.tinqinacademy.hotel.persistence.models.Room;
+import com.tinqinacademy.hotel.persistence.repositories.RoomRepositoryImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,15 +27,39 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
 @AllArgsConstructor
 public class SystemServiceImpl implements SystemService {
+    private final RoomRepository roomRepository;
+    private final BedRepository bedRepository;
+    private final BookingRepository bookingRepository;
+    private final GuestRepository guestRepository;
+    private final UserRepository userRepository;
 
     @Override
     public RegisterVisitorOutput registerVisitor(RegisterVisitorInput input) {
         log.info("start registerVisitor input: {}", input);
+
+        List<Guest> guests = new ArrayList<>();
+
+        input.getHotelVisitors()
+                .forEach(guest ->
+                        guests.add(Guest.builder()
+                                        .id(UUID.randomUUID())
+                                        .firstName(guest.getFirstName())
+                                        .lastName(guest.getLastName())
+                                        .phone(guest.getPhoneNo())
+                                        .birthday(guest.getBirthday())
+                                        .civilNumber(guest.getCivilNumber())
+                                        .idIssueAuthority(guest.getIdIssueAuthority())
+                                        .idIssueDate(guest.getIdIssueDate())
+                                        .idValidity(guest.getIdValidity())
+                                .build()));
+
+        guestRepository.saveAll(guests);
 
         RegisterVisitorOutput result = RegisterVisitorOutput.builder().build();
 
@@ -82,8 +112,30 @@ public class SystemServiceImpl implements SystemService {
     public CreateRoomOutput createRoom(CreateRoomInput input) {
         log.info("start createRoom input: {}", input);
 
+//        CreateRoomOutput result = CreateRoomOutput.builder()
+//                .roomId("5")
+//                .build();
+
+        List<Bed> beds = new ArrayList<>();
+
+        input.getBedSizes()
+                .forEach(bedSize ->
+                        beds.add(bedRepository.getBedByBedSize(bedSize.getCode())
+                                .orElse(null)));
+
+        Room room = Room.builder()
+                .id(UUID.randomUUID())
+                .number(input.getRoomNo())
+                .price(input.getPrice())
+                .floor(input.getFloor())
+                .bathroomType(BathroomType.getBathroomType(input.getBathroomType()))
+                .beds(beds)
+                .build();
+
+        roomRepository.save(room);
+
         CreateRoomOutput result = CreateRoomOutput.builder()
-                .roomId("5")
+                .roomId(String.valueOf(room.getId()))
                 .build();
 
         log.info("end createRoom result: {}", result);

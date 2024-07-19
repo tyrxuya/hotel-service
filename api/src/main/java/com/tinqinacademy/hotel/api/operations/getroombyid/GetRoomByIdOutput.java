@@ -1,13 +1,14 @@
 package com.tinqinacademy.hotel.api.operations.getroombyid;
 
-import com.tinqinacademy.hotel.api.models.BathroomType;
-import com.tinqinacademy.hotel.api.models.BedSize;
+import com.tinqinacademy.hotel.persistence.enums.BathroomType;
+import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +18,7 @@ import java.util.List;
 @Setter
 public class GetRoomByIdOutput {
     @Schema(example = "15")
-    private String roomId;
+    private UUID roomId;
 
     @Schema(example = "15124.15")
     private BigDecimal price;
