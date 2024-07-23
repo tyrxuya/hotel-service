@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @RestController
 @Tag(name = "System REST APIs")
@@ -66,7 +67,8 @@ public class SystemController {
                                                                        @RequestParam(required = false) @Schema(example = "vanio") String firstName,
                                                                        @RequestParam(required = false) @Schema(example = "georgiev") String lastName,
                                                                        @RequestParam(required = false) @Schema(example = "+359887839281") String phoneNo,
-                                                                       @RequestParam(required = false) @Schema(example = "0348888888") String idNo,
+                                                                       @RequestParam(required = false) @Schema(example = "0348888888") String civilNumber,
+                                                                       @RequestParam(required = false) @Schema(example = "2003-09-22") LocalDate birthday,
                                                                        @RequestParam(required = false) @Schema(example = "mvr varna") String idIssueAuthority,
                                                                        @RequestParam(required = false) @Schema(example = "2015-05-22") LocalDate idIssueDate) {
         HotelVisitorInput visitor = HotelVisitorInput.builder()
@@ -75,9 +77,10 @@ public class SystemController {
                 .firstName(firstName)
                 .lastName(lastName)
                 .phoneNo(phoneNo)
-                .idNo(idNo)
+                .civilNumber(civilNumber)
                 .idIssueAuthority(idIssueAuthority)
                 .idIssueDate(idIssueDate)
+                .birthday(birthday)
                 .build();
 
         GetRegisteredVisitorsInput input = GetRegisteredVisitorsInput.builder()
@@ -114,8 +117,12 @@ public class SystemController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<UpdateRoomOutput> updateRoom(@PathVariable @Schema(example = "15") String roomId,
+    public ResponseEntity<UpdateRoomOutput> updateRoom(@PathVariable UUID roomId,
                                                        @RequestBody @Valid UpdateRoomInput input) {
+        input = input.toBuilder()
+                .roomId(roomId)
+                .build();
+
         UpdateRoomOutput result = systemService.updateRoom(input);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -146,7 +153,7 @@ public class SystemController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<DeleteRoomOutput> deleteRoom(@PathVariable @Schema(example = "15") String roomId) {
+    public ResponseEntity<DeleteRoomOutput> deleteRoom(@PathVariable UUID roomId) {
         DeleteRoomInput input = DeleteRoomInput.builder()
                 .roomId(roomId)
                 .build();

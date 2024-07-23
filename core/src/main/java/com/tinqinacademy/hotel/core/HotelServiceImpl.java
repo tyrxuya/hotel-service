@@ -10,13 +10,17 @@ import com.tinqinacademy.hotel.api.operations.getroombyid.GetRoomByIdOutput;
 import com.tinqinacademy.hotel.api.operations.unbookroom.UnbookRoomInput;
 import com.tinqinacademy.hotel.api.operations.unbookroom.UnbookRoomOutput;
 import com.tinqinacademy.hotel.persistence.contracts.*;
+import com.tinqinacademy.hotel.persistence.models.Booking;
 import com.tinqinacademy.hotel.persistence.models.Room;
+import com.tinqinacademy.hotel.persistence.models.User;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -86,6 +90,26 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public BookRoomOutput bookRoom(BookRoomInput input) {
         log.info("start bookRoom input: {}", input);
+
+        User user = User.builder()
+                .id(UUID.randomUUID())
+                .username(input.getFirstName() + "_" + input.getLastName())
+                .password("random")
+                .build();
+
+        BigDecimal price = roomRepository.getPriceById(input.getRoomId())
+                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+
+        Booking booking = Booking.builder()
+                .id(UUID.randomUUID())
+                .roomId(input.getRoomId())
+                .startDate(input.getStartDate())
+                .endDate(input.getEndDate())
+                .userId(user.getId())
+                .price(price)
+                .build();
+
+        bookingRepository.save(booking);
 
         BookRoomOutput result = BookRoomOutput.builder().build();
 

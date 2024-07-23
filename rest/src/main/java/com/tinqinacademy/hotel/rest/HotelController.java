@@ -68,9 +68,9 @@ public class HotelController {
             @ApiResponse(responseCode = "200", description = "ok"),
             @ApiResponse(responseCode = "400", description = "bad request")
     })
-    public ResponseEntity<GetRoomByIdOutput> getRoomInfo(@PathVariable @Schema(example = "15") String roomId) {
+    public ResponseEntity<GetRoomByIdOutput> getRoomInfo(@PathVariable @Schema(example = "15") UUID roomId) {
         GetRoomByIdInput input = GetRoomByIdInput.builder()
-                .roomId(UUID.fromString(roomId))
+                .roomId(roomId)
                 .build();
 
         GetRoomByIdOutput result = hotelService.getRoomInfo(input);
@@ -87,7 +87,7 @@ public class HotelController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<BookRoomOutput> bookRoom(@PathVariable @Schema(example = "15") String roomId,
+    public ResponseEntity<BookRoomOutput> bookRoom(@PathVariable @Schema(example = "15") UUID roomId,
                                                    @RequestBody @Valid BookRoomInput input) {
         input = input.toBuilder()
                 .roomId(roomId)

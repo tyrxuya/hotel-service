@@ -2,6 +2,7 @@ package com.tinqinacademy.hotel.persistence.models;
 
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -17,5 +18,5 @@ public class Booking {
     private UUID userId;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Double price;
+    private BigDecimal price;
 }

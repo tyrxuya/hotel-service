@@ -73,6 +73,8 @@ public class SystemServiceImpl implements SystemService {
         log.info("start getVisitorsInfo input: {}", input);
 
         List<HotelVisitorOutput> visitors = new ArrayList<>();
+
+
         HotelVisitorOutput visitor = HotelVisitorOutput.builder()
                 .startDate(LocalDate.of(2021, 2, 3))
                 .endDate(LocalDate.of(2021, 2, 5))
@@ -147,8 +149,19 @@ public class SystemServiceImpl implements SystemService {
     public UpdateRoomOutput updateRoom(UpdateRoomInput input) {
         log.info("start updateRoom input: {}", input);
 
+        Room room = Room.builder()
+                .id(input.getRoomId())
+                .number(input.getRoomNo())
+                .price(input.getPrice())
+                .floor(input.getFloor())
+                .bathroomType(BathroomType.getBathroomType(input.getBathroomType()))
+                .beds(input.getBeds())
+                .build();
+
+        roomRepository.update(room);
+
         UpdateRoomOutput result = UpdateRoomOutput.builder()
-                .roomId("1231231")
+                .roomId(room.getId())
                 .build();
 
         log.info("end updateRoom result: {}", result);
@@ -172,6 +185,8 @@ public class SystemServiceImpl implements SystemService {
     @Override
     public DeleteRoomOutput deleteRoom(DeleteRoomInput input) {
         log.info("start deleteRoom input: {}", input);
+
+        roomRepository.deleteById(input.getRoomId());
 
         DeleteRoomOutput result = DeleteRoomOutput.builder().build();
 

@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -69,6 +70,24 @@ public class RoomRepositoryImpl implements RoomRepository {
                 set room_floor = ?, room_number = ?, bathroom_type = ?, price = ?
                 where id = ?;
                 """;
-        jdbcTemplate.update(sql, room.getId(), room.getFloor(), room.getNumber(), room.getBathroomType(), room.getPrice());
+        jdbcTemplate.update(sql, room.getFloor(), room.getNumber(), room.getBathroomType().getCode(), room.getPrice(), room.getId());
+
+        for (Bed bed : room.getBeds()) {
+            sql = """
+                update beds_rooms
+                set bed_id = ?
+                where room_id = ?;
+                """;
+            jdbcTemplate.update(sql, bed.getId(), room.getId());
+        }
+    }
+
+    @Override
+    public Optional<BigDecimal> getPriceById(UUID id) {
+        String sql = """
+                select sum(price) from rooms
+                where id = ?;
+                """;
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(BigDecimal.class), id));
     }
 }

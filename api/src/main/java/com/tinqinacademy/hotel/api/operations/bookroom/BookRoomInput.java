@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +19,7 @@ import java.time.LocalDate;
 @Setter
 public class BookRoomInput {
     @JsonIgnore
-    private String roomId;
+    private UUID roomId;
 
     @Schema(example = "2025-05-22")
     @PastOrPresent(message = "invalid startDate")
