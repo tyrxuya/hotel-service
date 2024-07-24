@@ -16,15 +16,10 @@ import java.util.List;
 @Getter
 @Setter
 public class CreateRoomInput {
-    @Schema(example = "2")
-    @Min(value = 1, message = "bedCount cannot be less than 1")
-    @Max(value = 10, message = "bedCount cannot be greater than 10")
-    private Integer bedCount;
-
     private List<BedSize> bedSizes;
 
     @Schema(example = "shared")
-    private String bathroomType;
+    private BathroomType bathroomType;
 
     @Schema(example = "7")
     @Min(value = 1, message = "floor cannot be less than 1")

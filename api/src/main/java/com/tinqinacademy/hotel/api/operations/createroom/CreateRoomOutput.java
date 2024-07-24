@@ -3,6 +3,8 @@ package com.tinqinacademy.hotel.api.operations.createroom;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.util.UUID;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -10,6 +12,5 @@ import lombok.*;
 @Getter
 @Setter
 public class CreateRoomOutput {
-    @Schema(example = "15")
-    private String roomId;
+    private UUID roomId;
 }
