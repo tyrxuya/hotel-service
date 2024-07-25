@@ -44,13 +44,11 @@ public class HotelController {
     })
     public ResponseEntity<CheckRoomsOutput> checkRoomAvailability(@RequestParam(required = false) @Schema(example = "2021-05-22") LocalDate startDate,
                                                                   @RequestParam(required = false) @Schema(example = "2021-05-25") LocalDate endDate,
-                                                                  @RequestParam(required = false) @Schema(example = "2") Integer bedCount,
                                                                   @RequestParam(required = false) @Schema(example = "kingSize") String bedSize,
                                                                   @RequestParam(required = false) @Schema(example = "private") String bathroomType) {
         CheckRoomsInput input = CheckRoomsInput.builder()
                 .startDate(startDate)
                 .endDate(endDate)
-                .bedCount(bedCount)
                 .bedSize(BedSize.getBedSize(bedSize))
                 .bathroomType(BathroomType.getBathroomType(bathroomType))
                 .build();
@@ -107,7 +105,7 @@ public class HotelController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<UnbookRoomOutput> unbookRoom(@PathVariable @Schema(example = "15") String bookingId) {
+    public ResponseEntity<UnbookRoomOutput> unbookRoom(@PathVariable @Schema(example = "15") UUID bookingId) {
         UnbookRoomInput input = UnbookRoomInput.builder()
                 .bookingId(bookingId)
                 .build();
