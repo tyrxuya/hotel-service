@@ -2,9 +2,11 @@ package com.tinqinacademy.hotel.persistence.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
 
 import java.util.Arrays;
 
+@Getter
 public enum BathroomType {
     PRIVATE("private"),
     SHARED("shared"),
@@ -28,10 +30,6 @@ public enum BathroomType {
 //            }
 //        }
 //        return BathroomType.UNKNOWN;
-    }
-
-    public String getCode() {
-        return code;
     }
 
     @Override

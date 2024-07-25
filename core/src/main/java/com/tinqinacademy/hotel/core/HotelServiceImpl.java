@@ -9,17 +9,22 @@ import com.tinqinacademy.hotel.api.operations.getroombyid.GetRoomByIdInput;
 import com.tinqinacademy.hotel.api.operations.getroombyid.GetRoomByIdOutput;
 import com.tinqinacademy.hotel.api.operations.unbookroom.UnbookRoomInput;
 import com.tinqinacademy.hotel.api.operations.unbookroom.UnbookRoomOutput;
+import com.tinqinacademy.hotel.core.converters.RoomToGetRoomByIdOutputConverter;
 import com.tinqinacademy.hotel.persistence.repositories.*;
 import com.tinqinacademy.hotel.persistence.entities.Booking;
 import com.tinqinacademy.hotel.persistence.entities.Room;
 import com.tinqinacademy.hotel.persistence.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,15 +36,16 @@ public class HotelServiceImpl implements HotelService {
     private final BookingRepository bookingRepository;
     private final GuestRepository guestRepository;
     private final UserRepository userRepository;
+    private final RoomToGetRoomByIdOutputConverter roomToGetRoomByIdOutputConverter;
 
     @Override
     public CheckRoomsOutput checkRoomAvailability(CheckRoomsInput input) {
         log.info("start checkRoomAvailability input: {}", input);
 
-        List<String> roomIds = new ArrayList<>();
-        roomIds.add("123");
-        roomIds.add("456");
-        roomIds.add("789");
+        List<UUID> roomIds = bookingRepository.searchRooms(input.getStartDate(),
+                input.getEndDate(),
+                input.getBedSize(),
+                input.getBathroomType());
 
         CheckRoomsOutput result = CheckRoomsOutput.builder()
                 .idList(roomIds)
@@ -54,32 +60,22 @@ public class HotelServiceImpl implements HotelService {
     public GetRoomByIdOutput getRoomInfo(GetRoomByIdInput input) {
         log.info("start getRoomInfo input: {}", input);
 
-//        List<LocalDate> datesOccupied = new ArrayList<>();
-//        datesOccupied.add(LocalDate.of(2020, 1, 1));
-//        datesOccupied.add(LocalDate.of(2020, 1, 2));
-//        datesOccupied.add(LocalDate.of(2020, 1, 3));
-//        datesOccupied.add(LocalDate.of(2020, 1, 4));
-//        datesOccupied.add(LocalDate.of(2020, 1, 5));
-//        datesOccupied.add(LocalDate.of(2020, 1, 6));
-//
-//        GetRoomByIdOutput result = GetRoomByIdOutput.builder()
-//                .roomId(input.getRoomId())
-//                .price(BigDecimal.valueOf(123124))
-//                .floor(5)
-//                .bedSize(BedSize.getBedSize("kingSize"))
-//                .bathroomType(BathroomType.getBathroomType("private"))
-//                .bedCount(10)
-//                .datesOccupied(datesOccupied)
-//                .build();
-
         Room room = roomRepository.findById(input.getRoomId())
                 .orElseThrow(() -> new IllegalArgumentException("Room not found"));
 
-        GetRoomByIdOutput result = GetRoomByIdOutput.builder()
-                .roomId(room.getId())
-                .price(room.getPrice())
-                .floor(room.getFloor())
-                .bathroomType(room.getBathroomType())
+        Optional<Booking> foundBooking = bookingRepository.findByRoomId(room.getId());
+
+        List<LocalDate> datesOccupied = new ArrayList<>();
+        if (foundBooking.isPresent()) {
+            Booking booking = foundBooking.get();
+            datesOccupied.add(booking.getStartDate());
+            datesOccupied.add(booking.getEndDate());
+        }
+
+        GetRoomByIdOutput result = roomToGetRoomByIdOutputConverter.convert(room);
+
+        result.toBuilder()
+                .datesOccupied(datesOccupied)
                 .build();
 
         log.info("end getRoomInfo result: {}", result);
@@ -125,7 +121,7 @@ public class HotelServiceImpl implements HotelService {
     public UnbookRoomOutput unbookRoom(UnbookRoomInput input) {
         log.info("start unbookRoom input: {}", input);
 
-
+        bookingRepository.deleteById(input.getBookingId());
 
         UnbookRoomOutput result = UnbookRoomOutput.builder().build();
 

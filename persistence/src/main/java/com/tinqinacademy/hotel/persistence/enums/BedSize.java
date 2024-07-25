@@ -2,9 +2,11 @@ package com.tinqinacademy.hotel.persistence.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
 
 import java.util.Arrays;
 
+@Getter
 public enum BedSize {
     SINGLE("single", 1),
     DOUBLE("double", 2),
@@ -33,14 +35,6 @@ public enum BedSize {
 //            }
 //        }
 //        return UNKNOWN;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public Integer getCapacity() {
-        return capacity;
     }
 
     @Override

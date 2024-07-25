@@ -20,9 +20,6 @@ public class CheckRoomsInput {
     @Schema(example = "2022-05-25")
     private LocalDate endDate;
 
-    @Schema(example = "2")
-    private Integer bedCount;
-
     @Schema(example = "kingSize")
     private BedSize bedSize;
 

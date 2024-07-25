@@ -3,6 +3,7 @@ package com.tinqinacademy.hotel.api.operations.checkrooms;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,5 +12,5 @@ import java.util.List;
 @Getter
 @Setter
 public class CheckRoomsOutput {
-    private List<String> idList;
+    private List<UUID> idList;
 }
