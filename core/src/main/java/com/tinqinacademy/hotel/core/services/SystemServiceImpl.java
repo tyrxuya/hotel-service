@@ -1,4 +1,4 @@
-package com.tinqinacademy.hotel.core;
+package com.tinqinacademy.hotel.core.services;
 
 import com.tinqinacademy.hotel.api.contracts.SystemService;
 import com.tinqinacademy.hotel.api.operations.createroom.CreateRoomInput;
@@ -7,7 +7,6 @@ import com.tinqinacademy.hotel.api.operations.deleteroom.DeleteRoomInput;
 import com.tinqinacademy.hotel.api.operations.deleteroom.DeleteRoomOutput;
 import com.tinqinacademy.hotel.api.operations.getregisteredvisitors.GetRegisteredVisitorsInput;
 import com.tinqinacademy.hotel.api.operations.getregisteredvisitors.GetRegisteredVisitorsOutput;
-import com.tinqinacademy.hotel.api.operations.hotelvisitor.HotelVisitorOutput;
 import com.tinqinacademy.hotel.api.operations.partialupdateroom.PartialUpdateRoomInput;
 import com.tinqinacademy.hotel.api.operations.partialupdateroom.PartialUpdateRoomOutput;
 import com.tinqinacademy.hotel.api.operations.registervisitor.RegisterVisitorInput;
@@ -15,20 +14,18 @@ import com.tinqinacademy.hotel.api.operations.registervisitor.RegisterVisitorOut
 import com.tinqinacademy.hotel.api.operations.updateroom.UpdateRoomInput;
 import com.tinqinacademy.hotel.api.operations.updateroom.UpdateRoomOutput;
 import com.tinqinacademy.hotel.persistence.entities.Bed;
+import com.tinqinacademy.hotel.persistence.entities.Booking;
 import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import com.tinqinacademy.hotel.persistence.repositories.*;
-import com.tinqinacademy.hotel.persistence.enums.BathroomType;
 import com.tinqinacademy.hotel.persistence.entities.Guest;
 import com.tinqinacademy.hotel.persistence.entities.Room;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -39,10 +36,14 @@ public class SystemServiceImpl implements SystemService {
     private final BookingRepository bookingRepository;
     private final GuestRepository guestRepository;
     private final UserRepository userRepository;
+    private final ConversionService conversionService;
 
     @Override
     public RegisterVisitorOutput registerVisitor(RegisterVisitorInput input) {
         log.info("start registerVisitor input: {}", input);
+
+        Booking booking = bookingRepository.findById(input.getBookingId())
+                .orElseThrow(() -> new IllegalArgumentException("booking not found"));
 
         List<Guest> guests = new ArrayList<>();
 
@@ -60,6 +61,10 @@ public class SystemServiceImpl implements SystemService {
                                 .build()));
 
         guestRepository.saveAll(guests);
+
+        guests.forEach(guest -> booking.getGuests().add(guest));
+
+        bookingRepository.save(booking);
 
         RegisterVisitorOutput result = RegisterVisitorOutput.builder().build();
 
@@ -81,20 +86,8 @@ public class SystemServiceImpl implements SystemService {
                 input.getVisitor().getIdIssueDate(),
                 input.getVisitor().getIdValidity());
 
-        List<HotelVisitorOutput> visitors = new ArrayList<>();
-
-        guests.forEach(guest -> visitors.add(HotelVisitorOutput.builder()
-                .firstName(guest.getFirstName())
-                .lastName(guest.getLastName())
-                .phoneNo(guest.getPhone())
-                .idNo(guest.getCivilNumber())
-                .idIssueAuthority(guest.getIdIssueAuthority())
-                .idIssueDate(guest.getIdIssueDate())
-                .build())
-        );
-
         GetRegisteredVisitorsOutput result = GetRegisteredVisitorsOutput.builder()
-                .hotelVisitors(visitors)
+                .hotelVisitors(conversionService.convert(guests, List.class))
                 .build();
 
         log.info("end getVisitorsInfo result: {}", result);
@@ -109,17 +102,14 @@ public class SystemServiceImpl implements SystemService {
         List<BedSize> bedSizes = new ArrayList<>(input.getBedSizes());
         List<Bed> beds = new ArrayList<>();
         bedSizes.forEach(bedSize -> {
-            Optional<Bed> bed = bedRepository.findBedByBedSize(bedSize);
-            bed.ifPresent(beds::add);
+            Bed bed = bedRepository.findBedByBedSize(bedSize)
+                    .orElseThrow(() -> new IllegalArgumentException("Bed not found"));
+            beds.add(bed);
         });
 
-        Room room = Room.builder()
-                .number(input.getRoomNo())
-                .price(input.getPrice())
-                .floor(input.getFloor())
-                .bathroomType(input.getBathroomType())
-                .beds(beds)
-                .build();
+        Room room = conversionService.convert(input, Room.class);
+
+        room.setBeds(beds);
 
         roomRepository.save(room);
 
@@ -146,8 +136,9 @@ public class SystemServiceImpl implements SystemService {
 
         List<Bed> beds = new ArrayList<>();
         input.getBedSizes().forEach(bedSize -> {
-            Optional<Bed> bed = bedRepository.findBedByBedSize(bedSize);
-            bed.ifPresent(beds::add);
+            Bed bed = bedRepository.findBedByBedSize(bedSize)
+                    .orElseThrow(() -> new IllegalArgumentException("Bed not found"));
+            beds.add(bed);
         });
 
         room.setBeds(beds);

@@ -1,0 +1,54 @@
+package com.tinqinacademy.hotel.rest;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tinqinacademy.hotel.api.contracts.UserService;
+import com.tinqinacademy.hotel.api.operations.createuser.CreateUserInput;
+import com.tinqinacademy.hotel.api.operations.createuser.CreateUserOutput;
+import com.tinqinacademy.hotel.api.operations.deleteuser.DeleteUserInput;
+import com.tinqinacademy.hotel.api.operations.deleteuser.DeleteUserOutput;
+import com.tinqinacademy.hotel.api.operations.getuser.GetUserInput;
+import com.tinqinacademy.hotel.api.operations.getuser.GetUserOutput;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+
+@RestController
+@Tag(name = "User REST APIs")
+@RequiredArgsConstructor
+public class UserController {
+    private final UserService userService;
+    private final ObjectMapper objectMapper;
+
+    @PostMapping(RestApiPaths.CREATE_USER)
+    public ResponseEntity<CreateUserOutput> createUser(@RequestBody CreateUserInput input) {
+        CreateUserOutput output = userService.createUser(input);
+
+        return new ResponseEntity<>(output, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(RestApiPaths.DELETE_USER)
+    public ResponseEntity<DeleteUserOutput> deleteUser(@PathVariable UUID userId) {
+        DeleteUserInput input = DeleteUserInput.builder()
+                .userId(userId)
+                .build();
+
+        DeleteUserOutput output = userService.deleteUser(input);
+
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @GetMapping(RestApiPaths.GET_USER)
+    public ResponseEntity<GetUserOutput> getUser(@PathVariable UUID userId) {
+        GetUserInput input = GetUserInput.builder()
+                .userId(userId)
+                .build();
+
+        GetUserOutput output = userService.getUser(input);
+
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+}

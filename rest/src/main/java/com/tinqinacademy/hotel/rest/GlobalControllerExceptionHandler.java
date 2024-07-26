@@ -38,6 +38,16 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorOutput> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex,
                                                                              HttpServletRequest request) {
+        return handleException(ex, request);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorOutput> handleIllegalArgumentException(IllegalArgumentException ex,
+                                                                      HttpServletRequest request) {
+        return handleException(ex, request);
+    }
+
+    private ResponseEntity<ErrorOutput> handleException(Exception ex, HttpServletRequest request) {
         log.error("Request {} raised {}", request.getRequestURL(), ex.getClass());
 
         return new ResponseEntity<>(errorHandler.handle(ex), HttpStatus.I_AM_A_TEAPOT);

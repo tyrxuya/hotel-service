@@ -36,4 +36,17 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
                            LocalDate to,
                            BedSize bedSize,
                            BathroomType bathroomType);
+
+    @Query(
+            value = """
+                    SELECT b.room.id FROM Booking b
+                    WHERE (
+                        (CAST(:from AS DATE) < b.startDate AND CAST(:to AS DATE) < b.startDate)
+                        OR
+                        (CAST(:from AS DATE) > b.endDate AND CAST(:to AS DATE) > b.endDate)
+                    )
+            """
+    )
+    List<UUID> searchRooms(LocalDate from,
+                           LocalDate to);
 }

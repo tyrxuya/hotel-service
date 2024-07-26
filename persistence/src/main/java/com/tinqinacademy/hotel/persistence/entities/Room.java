@@ -34,7 +34,7 @@ public class Room {
     @Column(nullable = false, precision = 6, scale = 2)
     private BigDecimal price;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "rooms_beds",
             joinColumns = @JoinColumn(name = "room_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "bed_id", referencedColumnName = "id"))

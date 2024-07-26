@@ -27,7 +27,7 @@ public class GetRoomByIdOutput {
     private Integer floor;
 
     @Schema(example = "kingSize")
-    private BedSize bedSize;
+    private List<BedSize> bedSizes;
 
     @Schema(example = "private")
     private BathroomType bathroomType;

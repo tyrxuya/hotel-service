@@ -2,10 +2,7 @@ package com.tinqinacademy.hotel.api.operations.bookroom;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -22,11 +19,11 @@ public class BookRoomInput {
     private UUID roomId;
 
     @Schema(example = "2025-05-22")
-    @PastOrPresent(message = "invalid startDate")
+    @FutureOrPresent(message = "invalid startDate")
     private LocalDate startDate;
 
     @Schema(example = "2025-05-25")
-    @PastOrPresent(message = "invalid endDate")
+    @FutureOrPresent(message = "invalid endDate")
     private LocalDate endDate;
 
     @Schema(example = "vanio")
@@ -44,4 +41,6 @@ public class BookRoomInput {
     @NotBlank(message = "phone number cant be blank")
     @Size(min = 10, max = 13, message = "phone number must be between 10 and 13 characters")
     private String phoneNo;
+
+    private String username;
 }

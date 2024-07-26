@@ -1,4 +1,4 @@
-package com.tinqinacademy.hotel.core;
+package com.tinqinacademy.hotel.core.services;
 
 import com.tinqinacademy.hotel.api.contracts.HotelService;
 import com.tinqinacademy.hotel.api.operations.bookroom.BookRoomInput;
@@ -9,18 +9,15 @@ import com.tinqinacademy.hotel.api.operations.getroombyid.GetRoomByIdInput;
 import com.tinqinacademy.hotel.api.operations.getroombyid.GetRoomByIdOutput;
 import com.tinqinacademy.hotel.api.operations.unbookroom.UnbookRoomInput;
 import com.tinqinacademy.hotel.api.operations.unbookroom.UnbookRoomOutput;
-import com.tinqinacademy.hotel.core.converters.RoomToGetRoomByIdOutputConverter;
+import com.tinqinacademy.hotel.persistence.entities.User;
 import com.tinqinacademy.hotel.persistence.repositories.*;
 import com.tinqinacademy.hotel.persistence.entities.Booking;
 import com.tinqinacademy.hotel.persistence.entities.Room;
-import com.tinqinacademy.hotel.persistence.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +33,7 @@ public class HotelServiceImpl implements HotelService {
     private final BookingRepository bookingRepository;
     private final GuestRepository guestRepository;
     private final UserRepository userRepository;
-    private final RoomToGetRoomByIdOutputConverter roomToGetRoomByIdOutputConverter;
+    private final ConversionService conversionService;
 
     @Override
     public CheckRoomsOutput checkRoomAvailability(CheckRoomsInput input) {
@@ -72,11 +69,9 @@ public class HotelServiceImpl implements HotelService {
             datesOccupied.add(booking.getEndDate());
         }
 
-        GetRoomByIdOutput result = roomToGetRoomByIdOutputConverter.convert(room);
+        GetRoomByIdOutput result = conversionService.convert(room, GetRoomByIdOutput.class);
 
-        result.toBuilder()
-                .datesOccupied(datesOccupied)
-                .build();
+        result.setDatesOccupied(datesOccupied);
 
         log.info("end getRoomInfo result: {}", result);
 
@@ -87,17 +82,26 @@ public class HotelServiceImpl implements HotelService {
     public BookRoomOutput bookRoom(BookRoomInput input) {
         log.info("start bookRoom input: {}", input);
 
-        User user = User.builder()
-                .id(UUID.randomUUID())
-                .username(input.getFirstName() + "_" + input.getLastName())
-                .password("random")
-                .build();
+//        User user = User.builder()
+//                .id(UUID.randomUUID())
+//                .username(input.getFirstName() + "_" + input.getLastName())
+//                .password("random")
+//                .build();
 
-        BigDecimal price = roomRepository.getPriceById(input.getRoomId())
-                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+//        userRepository.save(user);
+
+        User user = userRepository.findByUsername(input.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Room room = roomRepository.findById(input.getRoomId())
                 .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+
+        List<UUID> occupiedRooms = bookingRepository.searchRooms(input.getStartDate(),
+                input.getEndDate());
+
+        if (occupiedRooms.contains(room.getId())) {
+            throw new IllegalArgumentException("Room already occupied");
+        }
 
         Booking booking = Booking.builder()
                 .id(UUID.randomUUID())
@@ -105,7 +109,7 @@ public class HotelServiceImpl implements HotelService {
                 .startDate(input.getStartDate())
                 .endDate(input.getEndDate())
                 .user(user)
-                .price(price)
+                .price(room.getPrice())
                 .build();
 
         bookingRepository.save(booking);

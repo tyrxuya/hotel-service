@@ -50,6 +50,11 @@ public class ErrorHandlerImpl implements ErrorHandler {
                             )
                     );
         }
+        else {
+            errors.add(Error.builder()
+                    .message(ex.getMessage())
+                    .build());
+        }
 
         ErrorOutput errorOutput = ErrorOutput.builder()
                 .errors(errors)

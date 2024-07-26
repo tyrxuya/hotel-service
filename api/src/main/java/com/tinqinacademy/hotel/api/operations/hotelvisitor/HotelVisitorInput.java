@@ -13,14 +13,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class HotelVisitorInput {
-    @Schema(example = "2025-05-22")
-    @FutureOrPresent(message = "invalid startDate")
-    private LocalDate startDate;
-
-    @Schema(example = "2025-05-25")
-    @Future(message = "invalid endDate")
-    private LocalDate endDate;
-
     @Schema(example = "vanio")
     @NotBlank(message = "firstName cant be blank")
     @Size(min = 2, max = 50, message = "firstName must be between 2 and 50 characters")

@@ -46,7 +46,10 @@ public class SystemController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<RegisterVisitorOutput> registerVisitor(@RequestBody @Valid RegisterVisitorInput input) {
+    public ResponseEntity<RegisterVisitorOutput> registerVisitor(@PathVariable UUID bookingId,
+                                                                 @RequestBody @Valid RegisterVisitorInput input) {
+        input.setBookingId(bookingId);
+
         RegisterVisitorOutput result = systemService.registerVisitor(input);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
@@ -62,8 +65,6 @@ public class SystemController {
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
     public ResponseEntity<GetRegisteredVisitorsOutput> getVisitorsInfo(@RequestParam(required = false) @Schema(example = "101b") String roomNo,
-                                                                       @RequestParam(required = false) @Schema(example = "2022-05-22") LocalDate startDate,
-                                                                       @RequestParam(required = false) @Schema(example = "2022-05-25") LocalDate endDate,
                                                                        @RequestParam(required = false) @Schema(example = "vanio") String firstName,
                                                                        @RequestParam(required = false) @Schema(example = "georgiev") String lastName,
                                                                        @RequestParam(required = false) @Schema(example = "+359887839281") String phoneNo,
@@ -72,8 +73,6 @@ public class SystemController {
                                                                        @RequestParam(required = false) @Schema(example = "mvr varna") String idIssueAuthority,
                                                                        @RequestParam(required = false) @Schema(example = "2015-05-22") LocalDate idIssueDate) {
         HotelVisitorInput visitor = HotelVisitorInput.builder()
-                .startDate(startDate)
-                .endDate(endDate)
                 .firstName(firstName)
                 .lastName(lastName)
                 .phoneNo(phoneNo)
@@ -119,15 +118,15 @@ public class SystemController {
     })
     public ResponseEntity<UpdateRoomOutput> updateRoom(@PathVariable UUID roomId,
                                                        @RequestBody @Valid UpdateRoomInput input) {
-        input = input.toBuilder()
-                .roomId(roomId)
-                .build();
+        input.setRoomId(roomId);
 
         UpdateRoomOutput result = systemService.updateRoom(input);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PatchMapping(RestApiPaths.PARTIAL_UPDATE_ROOM)
+    @PatchMapping(
+            path = RestApiPaths.PARTIAL_UPDATE_ROOM,
+            consumes = "application/json-patch+json")
     @Operation(
             summary = "Partially update room REST API",
             description = "Admin partial update of room data."

@@ -43,10 +43,4 @@ public class Guest {
 
     @Column(nullable = false)
     private LocalDate idValidity;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinTable(name = "guests_bookings",
-            joinColumns = @JoinColumn(name = "guest_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "booking_id", referencedColumnName = "id"))
-    private List<Booking> bookings;
 }
