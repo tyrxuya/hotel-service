@@ -1,20 +1,37 @@
 version: '3.9'
 
 services:
-  postgres:
-    image: postgres:latest
+  hoteldb:
+    image: postgres
+    networks:
+      - hotel
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
-      - ~/apps/postgres:/var/lib/postgresql/data
+      - hoteldb:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=1234
       - POSTGRES_USER=tyrxuya
       - POSTGRES_DB=hotel
 
+  commentdb:
+    image: postgres
+    networks:
+      - hotel
+    ports:
+      - "5433:5432"
+    volumes:
+      - commentdb:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_USER=tyrxuya
+      - POSTGRES_DB=comments
+
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
+    networks:
+      - hotel
     environment:
       PGADMIN_DEFAULT_EMAIL: admin_not_used@user.com
       PGADMIN_DEFAULT_PASSWORD: admin_not_used
@@ -26,6 +43,10 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
+networks:
+  hotel:
+
 volumes:
-  postgres:
+  hoteldb:
   pgadmin_data:
+  commentdb:

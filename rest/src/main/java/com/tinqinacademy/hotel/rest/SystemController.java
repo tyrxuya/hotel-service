@@ -1,7 +1,7 @@
 package com.tinqinacademy.hotel.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tinqinacademy.hotel.api.contracts.SystemService;
+import com.tinqinacademy.hotel.api.contracts.operations.*;
 import com.tinqinacademy.hotel.api.operations.createroom.CreateRoomInput;
 import com.tinqinacademy.hotel.api.operations.createroom.CreateRoomOutput;
 import com.tinqinacademy.hotel.api.operations.deleteroom.DeleteRoomInput;
@@ -33,7 +33,12 @@ import java.util.UUID;
 @Tag(name = "System REST APIs")
 @RequiredArgsConstructor
 public class SystemController {
-    private final SystemService systemService;
+    private final RegisterVisitorService registerVisitorService;
+    private final GetVisitorsInfoService getVisitorsInfoService;
+    private final CreateRoomService createRoomService;
+    private final UpdateRoomService updateRoomService;
+    private final PartialUpdateRoomService partialUpdateRoomService;
+    private final DeleteRoomService deleteRoomService;
     private final ObjectMapper objectMapper;
 
     @PostMapping(RestApiPaths.REGISTER_VISITOR)
@@ -46,11 +51,11 @@ public class SystemController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<RegisterVisitorOutput> registerVisitor(@PathVariable UUID bookingId,
+    public ResponseEntity<RegisterVisitorOutput> registerVisitor(@PathVariable String bookingId,
                                                                  @RequestBody @Valid RegisterVisitorInput input) {
-        input.setBookingId(bookingId);
+        input.setBookingId(UUID.fromString(bookingId));
 
-        RegisterVisitorOutput result = systemService.registerVisitor(input);
+        RegisterVisitorOutput result = registerVisitorService.registerVisitor(input);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -87,7 +92,7 @@ public class SystemController {
                 .visitor(visitor)
                 .build();
 
-        GetRegisteredVisitorsOutput result = systemService.getVisitorsInfo(input);
+        GetRegisteredVisitorsOutput result = getVisitorsInfoService.getVisitorsInfo(input);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -102,7 +107,7 @@ public class SystemController {
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
     public ResponseEntity<CreateRoomOutput> createRoom(@RequestBody @Valid CreateRoomInput input) {
-        CreateRoomOutput result = systemService.createRoom(input);
+        CreateRoomOutput result = createRoomService.createRoom(input);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -116,11 +121,11 @@ public class SystemController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<UpdateRoomOutput> updateRoom(@PathVariable UUID roomId,
+    public ResponseEntity<UpdateRoomOutput> updateRoom(@PathVariable String roomId,
                                                        @RequestBody @Valid UpdateRoomInput input) {
-        input.setRoomId(roomId);
+        input.setRoomId(UUID.fromString(roomId));
 
-        UpdateRoomOutput result = systemService.updateRoom(input);
+        UpdateRoomOutput result = updateRoomService.updateRoom(input);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -138,7 +143,8 @@ public class SystemController {
     })
     public ResponseEntity<PartialUpdateRoomOutput> partialUpdateRoom(@PathVariable @Schema(example = "15") String roomId,
                                                                      @RequestBody @Valid PartialUpdateRoomInput input) {
-        PartialUpdateRoomOutput result = systemService.partialUpdateRoom(input);
+        input.setRoomId(UUID.fromString(roomId));
+        PartialUpdateRoomOutput result = partialUpdateRoomService.partialUpdateRoom(input);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -152,12 +158,12 @@ public class SystemController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<DeleteRoomOutput> deleteRoom(@PathVariable UUID roomId) {
+    public ResponseEntity<DeleteRoomOutput> deleteRoom(@PathVariable String roomId) {
         DeleteRoomInput input = DeleteRoomInput.builder()
-                .roomId(roomId)
+                .roomId(UUID.fromString(roomId))
                 .build();
 
-        DeleteRoomOutput result = systemService.deleteRoom(input);
+        DeleteRoomOutput result = deleteRoomService.deleteRoom(input);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

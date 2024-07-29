@@ -8,7 +8,9 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -17,11 +19,10 @@ public class BedInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        List<Bed> beds = bedRepository.findAll();
         for (BedSize bedSize : BedSize.values()) {
-            Bed bed = bedRepository.findBedByBedSize(bedSize)
-                    .orElse(null);
-            if (Objects.isNull(bed)) {
-                bed = Bed.builder()
+            if (beds.stream().noneMatch(bed -> bed.getBedSize().equals(bedSize))) {
+                Bed bed = Bed.builder()
                         .bedSize(bedSize)
                         .capacity(bedSize.getCapacity())
                         .build();

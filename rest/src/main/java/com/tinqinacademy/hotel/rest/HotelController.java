@@ -1,7 +1,10 @@
 package com.tinqinacademy.hotel.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tinqinacademy.hotel.api.contracts.HotelService;
+import com.tinqinacademy.hotel.api.contracts.operations.BookRoomService;
+import com.tinqinacademy.hotel.api.contracts.operations.CheckRoomAvailabilityService;
+import com.tinqinacademy.hotel.api.contracts.operations.GetRoomInfoService;
+import com.tinqinacademy.hotel.api.contracts.operations.UnbookRoomService;
 import com.tinqinacademy.hotel.persistence.enums.BathroomType;
 import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import com.tinqinacademy.hotel.api.operations.bookroom.BookRoomInput;
@@ -30,7 +33,10 @@ import java.util.UUID;
 @Tag(name = "Hotel REST APIs")
 @RequiredArgsConstructor
 public class HotelController {
-    private final HotelService hotelService;
+    private final CheckRoomAvailabilityService checkRoomAvailabilityService;
+    private final GetRoomInfoService getRoomInfoService;
+    private final UnbookRoomService unbookRoomService;
+    private final BookRoomService bookRoomService;
     private final ObjectMapper objectMapper;
 
     @GetMapping(RestApiPaths.CHECK_ROOM)
@@ -53,7 +59,7 @@ public class HotelController {
                 .bathroomType(BathroomType.getBathroomType(bathroomType))
                 .build();
 
-        CheckRoomsOutput result = hotelService.checkRoomAvailability(input);
+        CheckRoomsOutput result = checkRoomAvailabilityService.checkRoomAvailability(input);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -66,12 +72,12 @@ public class HotelController {
             @ApiResponse(responseCode = "200", description = "ok"),
             @ApiResponse(responseCode = "400", description = "bad request")
     })
-    public ResponseEntity<GetRoomByIdOutput> getRoomInfo(@PathVariable @Schema(example = "15") UUID roomId) {
+    public ResponseEntity<GetRoomByIdOutput> getRoomInfo(@PathVariable @Schema(example = "15") String roomId) {
         GetRoomByIdInput input = GetRoomByIdInput.builder()
-                .roomId(roomId)
+                .roomId(UUID.fromString(roomId))
                 .build();
 
-        GetRoomByIdOutput result = hotelService.getRoomInfo(input);
+        GetRoomByIdOutput result = getRoomInfoService.getRoomInfo(input);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -85,13 +91,11 @@ public class HotelController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<BookRoomOutput> bookRoom(@PathVariable @Schema(example = "15") UUID roomId,
+    public ResponseEntity<BookRoomOutput> bookRoom(@PathVariable @Schema(example = "15") String roomId,
                                                    @RequestBody @Valid BookRoomInput input) {
-        input = input.toBuilder()
-                .roomId(roomId)
-                .build();
+        input.setRoomId(UUID.fromString(roomId));
 
-        BookRoomOutput result = hotelService.bookRoom(input);
+        BookRoomOutput result = bookRoomService.bookRoom(input);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -105,12 +109,12 @@ public class HotelController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<UnbookRoomOutput> unbookRoom(@PathVariable @Schema(example = "15") UUID bookingId) {
+    public ResponseEntity<UnbookRoomOutput> unbookRoom(@PathVariable @Schema(example = "15") String bookingId) {
         UnbookRoomInput input = UnbookRoomInput.builder()
-                .bookingId(bookingId)
+                .bookingId(UUID.fromString(bookingId))
                 .build();
 
-        UnbookRoomOutput result = hotelService.unbookRoom(input);
+        UnbookRoomOutput result = unbookRoomService.unbookRoom(input);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

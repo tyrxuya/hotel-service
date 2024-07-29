@@ -1,7 +1,9 @@
 package com.tinqinacademy.hotel.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tinqinacademy.hotel.api.contracts.UserService;
+import com.tinqinacademy.hotel.api.contracts.operations.CreateUserService;
+import com.tinqinacademy.hotel.api.contracts.operations.DeleteUserService;
+import com.tinqinacademy.hotel.api.contracts.operations.GetUserService;
 import com.tinqinacademy.hotel.api.operations.createuser.CreateUserInput;
 import com.tinqinacademy.hotel.api.operations.createuser.CreateUserOutput;
 import com.tinqinacademy.hotel.api.operations.deleteuser.DeleteUserInput;
@@ -20,34 +22,36 @@ import java.util.UUID;
 @Tag(name = "User REST APIs")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
+    private final CreateUserService createUserService;
+    private final DeleteUserService deleteUserService;
+    private final GetUserService getUserService;
     private final ObjectMapper objectMapper;
 
     @PostMapping(RestApiPaths.CREATE_USER)
     public ResponseEntity<CreateUserOutput> createUser(@RequestBody CreateUserInput input) {
-        CreateUserOutput output = userService.createUser(input);
+        CreateUserOutput output = createUserService.createUser(input);
 
         return new ResponseEntity<>(output, HttpStatus.CREATED);
     }
 
     @DeleteMapping(RestApiPaths.DELETE_USER)
-    public ResponseEntity<DeleteUserOutput> deleteUser(@PathVariable UUID userId) {
+    public ResponseEntity<DeleteUserOutput> deleteUser(@PathVariable String userId) {
         DeleteUserInput input = DeleteUserInput.builder()
-                .userId(userId)
+                .userId(UUID.fromString(userId))
                 .build();
 
-        DeleteUserOutput output = userService.deleteUser(input);
+        DeleteUserOutput output = deleteUserService.deleteUser(input);
 
         return new ResponseEntity<>(output, HttpStatus.OK);
     }
 
     @GetMapping(RestApiPaths.GET_USER)
-    public ResponseEntity<GetUserOutput> getUser(@PathVariable UUID userId) {
+    public ResponseEntity<GetUserOutput> getUser(@PathVariable String userId) {
         GetUserInput input = GetUserInput.builder()
-                .userId(userId)
+                .userId(UUID.fromString(userId))
                 .build();
 
-        GetUserOutput output = userService.getUser(input);
+        GetUserOutput output = getUserService.getUser(input);
 
         return new ResponseEntity<>(output, HttpStatus.OK);
     }

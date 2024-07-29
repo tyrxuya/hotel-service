@@ -1,5 +1,6 @@
 package com.tinqinacademy.hotel.api.operations.partialupdateroom;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tinqinacademy.hotel.persistence.enums.BathroomType;
 import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -7,6 +8,8 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,13 +18,10 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class PartialUpdateRoomInput {
-    @Schema(example = "2")
-    @Min(value = 1, message = "bedCount cannot be less than 1")
-    @Max(value = 10, message = "bedCount cannot be greater than 10")
-    private Integer bedCount;
+    @JsonIgnore
+    private UUID roomId;
 
-    @Schema(example = "kingSize")
-    private BedSize bedSize;
+    private List<BedSize> bedSizes;
 
     @Schema(example = "shared")
     private BathroomType bathroomType;
@@ -32,7 +32,6 @@ public class PartialUpdateRoomInput {
     private Integer floor;
 
     @Schema(example = "700b")
-    @NotBlank(message = "room number can't be blank")
     private String roomNo;
 
     @Schema(example = "1838124.15")
