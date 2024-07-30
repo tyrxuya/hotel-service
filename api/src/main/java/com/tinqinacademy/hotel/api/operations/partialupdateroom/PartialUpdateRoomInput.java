@@ -19,7 +19,7 @@ import java.util.UUID;
 @Setter
 public class PartialUpdateRoomInput {
     @JsonIgnore
-    private UUID roomId;
+    private String roomId;
 
     private List<BedSize> bedSizes;
 

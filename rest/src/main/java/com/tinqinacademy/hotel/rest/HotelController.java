@@ -74,7 +74,7 @@ public class HotelController {
     })
     public ResponseEntity<GetRoomByIdOutput> getRoomInfo(@PathVariable @Schema(example = "15") String roomId) {
         GetRoomByIdInput input = GetRoomByIdInput.builder()
-                .roomId(UUID.fromString(roomId))
+                .roomId(roomId)
                 .build();
 
         GetRoomByIdOutput result = getRoomInfoService.getRoomInfo(input);
@@ -93,7 +93,7 @@ public class HotelController {
     })
     public ResponseEntity<BookRoomOutput> bookRoom(@PathVariable @Schema(example = "15") String roomId,
                                                    @RequestBody @Valid BookRoomInput input) {
-        input.setRoomId(UUID.fromString(roomId));
+        input.setRoomId(roomId);
 
         BookRoomOutput result = bookRoomService.bookRoom(input);
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -111,7 +111,7 @@ public class HotelController {
     })
     public ResponseEntity<UnbookRoomOutput> unbookRoom(@PathVariable @Schema(example = "15") String bookingId) {
         UnbookRoomInput input = UnbookRoomInput.builder()
-                .bookingId(UUID.fromString(bookingId))
+                .bookingId(bookingId)
                 .build();
 
         UnbookRoomOutput result = unbookRoomService.unbookRoom(input);

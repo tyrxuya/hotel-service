@@ -13,5 +13,5 @@ import java.util.UUID;
 @Setter
 public class UnbookRoomInput {
     @Schema(example = "100")
-    private UUID bookingId;
+    private String bookingId;
 }

@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -21,7 +23,7 @@ public class GetUserServiceImpl implements GetUserService {
     public GetUserOutput getUser(GetUserInput input) {
         log.info("start getUser input: {}", input);
 
-        User user = userRepository.findById(input.getUserId())
+        User user = userRepository.findById(UUID.fromString(input.getUserId()))
                 .orElseThrow(() -> new IllegalArgumentException("user not found"));
 
         GetUserOutput result = conversionService.convert(user, GetUserOutput.class);

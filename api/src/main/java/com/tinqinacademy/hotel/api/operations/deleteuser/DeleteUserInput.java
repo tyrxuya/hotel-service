@@ -11,5 +11,5 @@ import java.util.UUID;
 @Getter
 @Setter
 public class DeleteUserInput {
-    private UUID userId;
+    private String userId;
 }

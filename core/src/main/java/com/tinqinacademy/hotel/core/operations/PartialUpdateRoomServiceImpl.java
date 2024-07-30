@@ -12,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -29,35 +27,31 @@ public class PartialUpdateRoomServiceImpl implements PartialUpdateRoomService {
 
         PartialUpdateRoomOutput result = PartialUpdateRoomOutput.builder().build();
 
-        Room room = roomRepository.findById(input.getRoomId())
+        Room room = roomRepository.findById(UUID.fromString(input.getRoomId()))
                 .orElseThrow(() -> new IllegalArgumentException("Room not found!"));
 
-        if (Objects.nonNull(input.getRoomNo())) {
-            room.setNumber(input.getRoomNo());
-        }
+        Optional.ofNullable(input.getRoomNo())
+                .ifPresent(room::setNumber);
 
-        if (Objects.nonNull(input.getBathroomType())) {
-            room.setBathroomType(input.getBathroomType());
-        }
+        Optional.ofNullable(input.getBathroomType())
+                .ifPresent(room::setBathroomType);
 
-        if (Objects.nonNull(input.getFloor())) {
-            room.setFloor(input.getFloor());
-        }
+        Optional.ofNullable(input.getFloor())
+                .ifPresent(room::setFloor);
 
-        if (Objects.nonNull(input.getPrice())) {
-            room.setPrice(input.getPrice());
-        }
+        Optional.ofNullable(input.getPrice())
+                .ifPresent(room::setPrice);
 
-        if (Objects.nonNull(input.getBedSizes())) {
-            List<BedSize> bedSizes = new ArrayList<>(input.getBedSizes());
-            List<Bed> beds = new ArrayList<>();
-            input.getBedSizes().forEach(bedSize -> beds.add(
-                            bedRepository.findBedByBedSize(bedSize)
-                                    .orElseThrow(() -> new IllegalArgumentException("Bed not found"))
-                    )
-            );
-            room.setBeds(beds);
-        }
+        Optional.ofNullable(input.getBedSizes())
+                .ifPresent(bedSizes -> {
+                    List<Bed> beds = new ArrayList<>();
+                    bedSizes.forEach(bedSize -> beds.add(
+                                    bedRepository.findBedByBedSize(bedSize)
+                                            .orElseThrow(() -> new IllegalArgumentException("Bed not found"))
+                            )
+                    );
+                    room.setBeds(beds);
+                });
 
         roomRepository.save(room);
 

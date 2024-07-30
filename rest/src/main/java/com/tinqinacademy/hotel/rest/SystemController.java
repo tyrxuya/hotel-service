@@ -53,7 +53,7 @@ public class SystemController {
     })
     public ResponseEntity<RegisterVisitorOutput> registerVisitor(@PathVariable String bookingId,
                                                                  @RequestBody @Valid RegisterVisitorInput input) {
-        input.setBookingId(UUID.fromString(bookingId));
+        input.setBookingId(bookingId);
 
         RegisterVisitorOutput result = registerVisitorService.registerVisitor(input);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
@@ -123,7 +123,7 @@ public class SystemController {
     })
     public ResponseEntity<UpdateRoomOutput> updateRoom(@PathVariable String roomId,
                                                        @RequestBody @Valid UpdateRoomInput input) {
-        input.setRoomId(UUID.fromString(roomId));
+        input.setRoomId(roomId);
 
         UpdateRoomOutput result = updateRoomService.updateRoom(input);
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -143,7 +143,7 @@ public class SystemController {
     })
     public ResponseEntity<PartialUpdateRoomOutput> partialUpdateRoom(@PathVariable @Schema(example = "15") String roomId,
                                                                      @RequestBody @Valid PartialUpdateRoomInput input) {
-        input.setRoomId(UUID.fromString(roomId));
+        input.setRoomId(roomId);
         PartialUpdateRoomOutput result = partialUpdateRoomService.partialUpdateRoom(input);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -160,7 +160,7 @@ public class SystemController {
     })
     public ResponseEntity<DeleteRoomOutput> deleteRoom(@PathVariable String roomId) {
         DeleteRoomInput input = DeleteRoomInput.builder()
-                .roomId(UUID.fromString(roomId))
+                .roomId(roomId)
                 .build();
 
         DeleteRoomOutput result = deleteRoomService.deleteRoom(input);

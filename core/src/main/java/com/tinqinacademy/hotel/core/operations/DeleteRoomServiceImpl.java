@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -18,7 +20,7 @@ public class DeleteRoomServiceImpl implements DeleteRoomService {
     public DeleteRoomOutput deleteRoom(DeleteRoomInput input) {
         log.info("start deleteRoom input: {}", input);
 
-        roomRepository.deleteById(input.getRoomId());
+        roomRepository.deleteById(UUID.fromString(input.getRoomId()));
 
         DeleteRoomOutput result = DeleteRoomOutput.builder().build();
 

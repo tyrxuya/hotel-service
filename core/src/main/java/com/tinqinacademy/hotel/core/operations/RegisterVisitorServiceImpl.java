@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -26,7 +27,7 @@ public class RegisterVisitorServiceImpl implements RegisterVisitorService {
     public RegisterVisitorOutput registerVisitor(RegisterVisitorInput input) {
         log.info("start registerVisitor input: {}", input);
 
-        Booking booking = bookingRepository.findById(input.getBookingId())
+        Booking booking = bookingRepository.findById(UUID.fromString(input.getBookingId()))
                 .orElseThrow(() -> new IllegalArgumentException("booking not found"));
 
         List<Guest> guests = initializeGuestList(input.getHotelVisitors());

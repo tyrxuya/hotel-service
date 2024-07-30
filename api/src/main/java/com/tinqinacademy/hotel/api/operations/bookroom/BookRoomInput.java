@@ -16,7 +16,7 @@ import java.util.UUID;
 @Setter
 public class BookRoomInput {
     @JsonIgnore
-    private UUID roomId;
+    private String roomId;
 
     @Schema(example = "2025-05-22")
     @FutureOrPresent(message = "invalid startDate")

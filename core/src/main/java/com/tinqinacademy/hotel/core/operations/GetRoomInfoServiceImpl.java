@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -29,24 +30,37 @@ public class GetRoomInfoServiceImpl implements GetRoomInfoService {
     public GetRoomByIdOutput getRoomInfo(GetRoomByIdInput input) {
         log.info("start getRoomInfo input: {}", input);
 
-        Room room = roomRepository.findById(input.getRoomId())
-                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+        Room room = findRoomByInput(input);
 
-        Optional<Booking> foundBooking = bookingRepository.findByRoomId(room.getId());
-
-        List<LocalDate> datesOccupied = new ArrayList<>();
-        if (foundBooking.isPresent()) {
-            Booking booking = foundBooking.get();
-            datesOccupied.add(booking.getStartDate());
-            datesOccupied.add(booking.getEndDate());
-        }
+        Booking booking = findBookingByRoom(room);
 
         GetRoomByIdOutput result = conversionService.convert(room, GetRoomByIdOutput.class);
+
+        List<LocalDate> datesOccupied = getDatesOccupiedFromBooking(booking);
 
         result.setDatesOccupied(datesOccupied);
 
         log.info("end getRoomInfo result: {}", result);
 
         return result;
+    }
+
+    private Booking findBookingByRoom(Room room) {
+        return bookingRepository.findByRoomId(room.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
+    }
+
+    private Room findRoomByInput(GetRoomByIdInput input) {
+        return roomRepository.findById(UUID.fromString(input.getRoomId()))
+                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+    }
+
+    private List<LocalDate> getDatesOccupiedFromBooking(Booking booking) {
+        List<LocalDate> datesOccupied = new ArrayList<>();
+
+        datesOccupied.add(booking.getStartDate());
+        datesOccupied.add(booking.getEndDate());
+
+        return datesOccupied;
     }
 }

@@ -37,7 +37,7 @@ public class UserController {
     @DeleteMapping(RestApiPaths.DELETE_USER)
     public ResponseEntity<DeleteUserOutput> deleteUser(@PathVariable String userId) {
         DeleteUserInput input = DeleteUserInput.builder()
-                .userId(UUID.fromString(userId))
+                .userId(userId)
                 .build();
 
         DeleteUserOutput output = deleteUserService.deleteUser(input);
@@ -48,7 +48,7 @@ public class UserController {
     @GetMapping(RestApiPaths.GET_USER)
     public ResponseEntity<GetUserOutput> getUser(@PathVariable String userId) {
         GetUserInput input = GetUserInput.builder()
-                .userId(UUID.fromString(userId))
+                .userId(userId)
                 .build();
 
         GetUserOutput output = getUserService.getUser(input);

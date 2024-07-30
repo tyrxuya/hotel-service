@@ -28,13 +28,7 @@ public class CreateRoomServiceImpl implements CreateRoomService {
     public CreateRoomOutput createRoom(CreateRoomInput input) {
         log.info("start createRoom input: {}", input);
 
-        List<BedSize> bedSizes = new ArrayList<>(input.getBedSizes());
-        List<Bed> beds = new ArrayList<>();
-        bedSizes.forEach(bedSize -> {
-            Bed bed = bedRepository.findBedByBedSize(bedSize)
-                    .orElseThrow(() -> new IllegalArgumentException("Bed not found"));
-            beds.add(bed);
-        });
+        List<Bed> beds = createBeds(input);
 
         Room room = conversionService.convert(input, Room.class);
 
@@ -49,5 +43,18 @@ public class CreateRoomServiceImpl implements CreateRoomService {
         log.info("end createRoom result: {}", result);
 
         return result;
+    }
+
+    private List<Bed> createBeds(CreateRoomInput input) {
+        List<BedSize> bedSizes = new ArrayList<>(input.getBedSizes());
+
+        List<Bed> beds = new ArrayList<>();
+        bedSizes.forEach(bedSize -> {
+            Bed bed = bedRepository.findBedByBedSize(bedSize)
+                    .orElseThrow(() -> new IllegalArgumentException("Bed not found"));
+            beds.add(bed);
+        });
+
+        return beds;
     }
 }

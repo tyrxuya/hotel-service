@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -25,7 +26,7 @@ public class UpdateRoomServiceImpl implements UpdateRoomService {
     public UpdateRoomOutput updateRoom(UpdateRoomInput input) {
         log.info("start updateRoom input: {}", input);
 
-        Room room = roomRepository.findById(input.getRoomId())
+        Room room = roomRepository.findById(UUID.fromString(input.getRoomId()))
                 .orElseThrow(() -> new IllegalArgumentException("Room not found!"));
 
         room.setBathroomType(input.getBathroomType());

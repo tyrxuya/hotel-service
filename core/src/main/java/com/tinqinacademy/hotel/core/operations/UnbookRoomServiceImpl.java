@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -18,7 +20,7 @@ public class UnbookRoomServiceImpl implements UnbookRoomService {
     public UnbookRoomOutput unbookRoom(UnbookRoomInput input) {
         log.info("start unbookRoom input: {}", input);
 
-        bookingRepository.deleteById(input.getBookingId());
+        bookingRepository.deleteById(UUID.fromString(input.getBookingId()));
 
         UnbookRoomOutput result = UnbookRoomOutput.builder().build();
 

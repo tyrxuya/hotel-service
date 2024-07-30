@@ -16,7 +16,7 @@ import java.util.UUID;
 @Setter
 public class RegisterVisitorInput {
     @JsonIgnore
-    private UUID bookingId;
+    private String bookingId;
 
     @Valid
     private List<HotelVisitorInput> hotelVisitors;

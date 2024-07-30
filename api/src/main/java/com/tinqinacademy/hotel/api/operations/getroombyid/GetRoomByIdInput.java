@@ -13,5 +13,5 @@ import java.util.UUID;
 @Setter
 public class GetRoomByIdInput {
     @Schema(example = "15")
-    private UUID roomId;
+    private String roomId;
 }

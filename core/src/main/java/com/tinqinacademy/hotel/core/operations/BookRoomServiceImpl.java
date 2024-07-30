@@ -13,7 +13,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -28,35 +31,13 @@ public class BookRoomServiceImpl implements BookRoomService {
     public BookRoomOutput bookRoom(BookRoomInput input) {
         log.info("start bookRoom input: {}", input);
 
-//        User user = User.builder()
-//                .id(UUID.randomUUID())
-//                .username(input.getFirstName() + "_" + input.getLastName())
-//                .password("random")
-//                .build();
+        User user = getUserFromRepository(input);
 
-//        userRepository.save(user);
+        Room room = getRoomFromRepository(input);
 
-        User user = userRepository.findByUsername(input.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        checkIsRoomPresent(input);
 
-        Room room = roomRepository.findById(input.getRoomId())
-                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
-
-        List<UUID> occupiedRooms = bookingRepository.searchRooms(input.getStartDate(),
-                input.getEndDate());
-
-        if (occupiedRooms.contains(room.getId())) {
-            throw new IllegalArgumentException("Room already occupied");
-        }
-
-        Booking booking = Booking.builder()
-                .id(UUID.randomUUID())
-                .room(room)
-                .startDate(input.getStartDate())
-                .endDate(input.getEndDate())
-                .user(user)
-                .price(room.getPrice())
-                .build();
+        Booking booking = createBooking(input, room, user);
 
         bookingRepository.save(booking);
 
@@ -65,5 +46,41 @@ public class BookRoomServiceImpl implements BookRoomService {
         log.info("end bookRoom result: {}", result);
 
         return result;
+    }
+
+    private Booking createBooking(BookRoomInput input, Room room, User user) {
+        return Booking.builder()
+                .room(room)
+                .startDate(input.getStartDate())
+                .endDate(input.getEndDate())
+                .user(user)
+                .price(getFinalPrice(input, room))
+                .build();
+    }
+
+    private BigDecimal getFinalPrice(BookRoomInput input, Room room) {
+        Long days = ChronoUnit.DAYS.between(input.getStartDate(), input.getEndDate());
+
+        BigDecimal daysDecimal = BigDecimal.valueOf(days);
+
+        return daysDecimal.multiply(room.getPrice());
+    }
+
+    private void checkIsRoomPresent(BookRoomInput input) {
+        bookingRepository.searchRooms(input.getStartDate(), input.getEndDate())
+                .stream()
+                .filter(id -> UUID.fromString(input.getRoomId()).equals(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+    }
+
+    private Room getRoomFromRepository(BookRoomInput input) {
+        return roomRepository.findById(UUID.fromString(input.getRoomId()))
+                .orElseThrow(() -> new IllegalArgumentException("Room not found"));
+    }
+
+    private User getUserFromRepository(BookRoomInput input) {
+        return userRepository.findByUsername(input.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 }
