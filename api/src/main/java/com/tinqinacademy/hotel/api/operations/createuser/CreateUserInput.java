@@ -1,5 +1,6 @@
 package com.tinqinacademy.hotel.api.operations.createuser;
 
+import com.tinqinacademy.hotel.api.contracts.base.OperationInput;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +9,6 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,7 +16,7 @@ import java.util.UUID;
 @ToString
 @Getter
 @Setter
-public class CreateUserInput {
+public class CreateUserInput implements OperationInput {
     private String username;
     private String password;
     private LocalDate birthday;

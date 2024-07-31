@@ -1,5 +1,6 @@
 package com.tinqinacademy.hotel.api.operations.getuser;
 
+import com.tinqinacademy.hotel.api.contracts.base.OperationOutput;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 @ToString
 @Getter
 @Setter
-public class GetUserOutput {
+public class GetUserOutput implements OperationOutput {
     private String username;
     private String password;
     private LocalDate birthday;

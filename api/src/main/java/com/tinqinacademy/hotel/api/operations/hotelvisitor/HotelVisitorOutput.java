@@ -1,5 +1,6 @@
 package com.tinqinacademy.hotel.api.operations.hotelvisitor;
 
+import com.tinqinacademy.hotel.api.contracts.base.OperationOutput;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 @ToString
 @Getter
 @Setter
-public class HotelVisitorOutput {
+public class HotelVisitorOutput implements OperationOutput {
     @Schema(example = "2022-05-22")
     private LocalDate startDate;
 

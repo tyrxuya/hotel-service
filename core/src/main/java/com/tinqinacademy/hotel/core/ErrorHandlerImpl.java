@@ -1,7 +1,7 @@
 package com.tinqinacademy.hotel.core;
 
 import com.tinqinacademy.hotel.api.contracts.ErrorHandler;
-import com.tinqinacademy.hotel.api.errors.Error;
+import com.tinqinacademy.hotel.api.errors.Errors;
 import com.tinqinacademy.hotel.api.errors.ErrorOutput;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import java.util.List;
 public class ErrorHandlerImpl implements ErrorHandler {
     @Override
     public ErrorOutput handle(Exception ex) {
-        List<Error> errors = new ArrayList<>();
+        List<Errors> errors = new ArrayList<>();
 
 //        Arrays.stream(ex.getSuppressed())
 //                .forEach(error -> errors.add(
@@ -32,10 +32,9 @@ public class ErrorHandlerImpl implements ErrorHandler {
             bindException.getBindingResult()
                     .getFieldErrors()
                     .forEach(error -> errors.add(
-                                    Error.builder()
+                                    Errors.builder()
                                             .message(error.getDefaultMessage())
                                             .field(error.getField())
-                                            .errorCode(error.getCode())
                                             .build()
                             )
                     );
@@ -43,15 +42,14 @@ public class ErrorHandlerImpl implements ErrorHandler {
         else if (ex instanceof ConstraintViolationException constraintException) {
             constraintException.getConstraintViolations()
                     .forEach(error -> errors.add(
-                            Error.builder()
+                            Errors.builder()
                                     .message(error.getMessage())
-                                    .errorCode(error.getInvalidValue().toString())
                                     .build()
                             )
                     );
         }
         else {
-            errors.add(Error.builder()
+            errors.add(Errors.builder()
                     .message(ex.getMessage())
                     .build());
         }

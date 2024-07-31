@@ -1,5 +1,6 @@
 package com.tinqinacademy.hotel.api.operations.partialupdateroom;
 
+import com.tinqinacademy.hotel.api.contracts.base.OperationOutput;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -9,7 +10,7 @@ import lombok.*;
 @ToString
 @Getter
 @Setter
-public class PartialUpdateRoomOutput {
+public class PartialUpdateRoomOutput implements OperationOutput {
     @Schema(example = "15")
     private String roomId;
 }

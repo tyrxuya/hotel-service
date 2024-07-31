@@ -32,6 +32,7 @@
         <jackson.version>2.17.1</jackson.version>
         <swagger.version>2.6.0</swagger.version>
         <flatten.version>1.6.0</flatten.version>
+        <vavr.version>0.10.4</vavr.version>
     </properties>
 
     <dependencies>

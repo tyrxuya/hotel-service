@@ -1,5 +1,6 @@
 package com.tinqinacademy.hotel.api.operations.getregisteredvisitors;
 
+import com.tinqinacademy.hotel.api.contracts.base.OperationInput;
 import com.tinqinacademy.hotel.api.operations.hotelvisitor.HotelVisitorInput;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -11,7 +12,7 @@ import lombok.*;
 @ToString
 @Getter
 @Setter
-public class GetRegisteredVisitorsInput {
+public class GetRegisteredVisitorsInput implements OperationInput {
     @Valid
     private HotelVisitorInput visitor;
 

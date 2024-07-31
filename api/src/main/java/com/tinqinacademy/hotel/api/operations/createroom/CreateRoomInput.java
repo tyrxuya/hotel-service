@@ -1,5 +1,6 @@
 package com.tinqinacademy.hotel.api.operations.createroom;
 
+import com.tinqinacademy.hotel.api.contracts.base.OperationInput;
 import com.tinqinacademy.hotel.persistence.enums.BathroomType;
 import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,7 +16,7 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
-public class CreateRoomInput {
+public class CreateRoomInput implements OperationInput {
     private List<BedSize> bedSizes;
 
     @Schema(example = "shared")

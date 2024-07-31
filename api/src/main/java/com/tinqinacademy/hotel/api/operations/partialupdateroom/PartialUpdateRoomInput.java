@@ -1,6 +1,7 @@
 package com.tinqinacademy.hotel.api.operations.partialupdateroom;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tinqinacademy.hotel.api.contracts.base.OperationInput;
 import com.tinqinacademy.hotel.persistence.enums.BathroomType;
 import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,7 +10,6 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +17,7 @@ import java.util.UUID;
 @ToString
 @Getter
 @Setter
-public class PartialUpdateRoomInput {
+public class PartialUpdateRoomInput implements OperationInput {
     @JsonIgnore
     private String roomId;
 

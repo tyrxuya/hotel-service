@@ -1,5 +1,6 @@
 package com.tinqinacademy.hotel.api.operations.deleteuser;
 
+import com.tinqinacademy.hotel.api.contracts.base.OperationOutput;
 import lombok.*;
 
 @NoArgsConstructor
@@ -8,5 +9,5 @@ import lombok.*;
 @ToString
 @Getter
 @Setter
-public class DeleteUserOutput {
+public class DeleteUserOutput implements OperationOutput {
 }

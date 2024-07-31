@@ -1,6 +1,7 @@
 package com.tinqinacademy.hotel.api.errors;
 
 import lombok.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,5 +14,6 @@ import java.util.List;
 @Builder
 @Component
 public class ErrorOutput {
-    private List<Error> errors;
+    private List<Errors> errors;
+    private HttpStatus status;
 }

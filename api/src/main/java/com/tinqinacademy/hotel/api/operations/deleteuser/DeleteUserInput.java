@@ -1,8 +1,7 @@
 package com.tinqinacademy.hotel.api.operations.deleteuser;
 
+import com.tinqinacademy.hotel.api.contracts.base.OperationInput;
 import lombok.*;
-
-import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -10,6 +9,6 @@ import java.util.UUID;
 @ToString
 @Getter
 @Setter
-public class DeleteUserInput {
+public class DeleteUserInput implements OperationInput {
     private String userId;
 }

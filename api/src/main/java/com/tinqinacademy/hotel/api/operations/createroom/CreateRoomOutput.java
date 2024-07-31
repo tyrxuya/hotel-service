@@ -1,6 +1,6 @@
 package com.tinqinacademy.hotel.api.operations.createroom;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.tinqinacademy.hotel.api.contracts.base.OperationOutput;
 import lombok.*;
 
 import java.util.UUID;
@@ -11,6 +11,6 @@ import java.util.UUID;
 @ToString
 @Getter
 @Setter
-public class CreateRoomOutput {
+public class CreateRoomOutput implements OperationOutput {
     private UUID roomId;
 }

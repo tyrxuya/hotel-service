@@ -1,25 +1,32 @@
 package com.tinqinacademy.hotel.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tinqinacademy.hotel.api.contracts.operations.*;
+import com.tinqinacademy.hotel.api.errors.ErrorOutput;
 import com.tinqinacademy.hotel.api.operations.createroom.CreateRoomInput;
+import com.tinqinacademy.hotel.api.operations.createroom.CreateRoom;
 import com.tinqinacademy.hotel.api.operations.createroom.CreateRoomOutput;
 import com.tinqinacademy.hotel.api.operations.deleteroom.DeleteRoomInput;
+import com.tinqinacademy.hotel.api.operations.deleteroom.DeleteRoom;
 import com.tinqinacademy.hotel.api.operations.deleteroom.DeleteRoomOutput;
 import com.tinqinacademy.hotel.api.operations.getregisteredvisitors.GetRegisteredVisitorsInput;
 import com.tinqinacademy.hotel.api.operations.getregisteredvisitors.GetRegisteredVisitorsOutput;
+import com.tinqinacademy.hotel.api.operations.getregisteredvisitors.GetVisitorsInfo;
 import com.tinqinacademy.hotel.api.operations.hotelvisitor.HotelVisitorInput;
 import com.tinqinacademy.hotel.api.operations.partialupdateroom.PartialUpdateRoomInput;
+import com.tinqinacademy.hotel.api.operations.partialupdateroom.PartialUpdateRoom;
 import com.tinqinacademy.hotel.api.operations.partialupdateroom.PartialUpdateRoomOutput;
 import com.tinqinacademy.hotel.api.operations.registervisitor.RegisterVisitorInput;
+import com.tinqinacademy.hotel.api.operations.registervisitor.RegisterVisitor;
 import com.tinqinacademy.hotel.api.operations.registervisitor.RegisterVisitorOutput;
 import com.tinqinacademy.hotel.api.operations.updateroom.UpdateRoomInput;
+import com.tinqinacademy.hotel.api.operations.updateroom.UpdateRoom;
 import com.tinqinacademy.hotel.api.operations.updateroom.UpdateRoomOutput;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.vavr.control.Either;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,18 +34,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @RestController
 @Tag(name = "System REST APIs")
 @RequiredArgsConstructor
-public class SystemController {
-    private final RegisterVisitorService registerVisitorService;
-    private final GetVisitorsInfoService getVisitorsInfoService;
-    private final CreateRoomService createRoomService;
-    private final UpdateRoomService updateRoomService;
-    private final PartialUpdateRoomService partialUpdateRoomService;
-    private final DeleteRoomService deleteRoomService;
+public class SystemController extends BaseController {
+    private final RegisterVisitor registerVisitorOperation;
+    private final GetVisitorsInfo getVisitorsInfoOperation;
+    private final CreateRoom createRoomOperation;
+    private final UpdateRoom updateRoomOperation;
+    private final PartialUpdateRoom partialUpdateRoomOperation;
+    private final DeleteRoom deleteRoomOperation;
     private final ObjectMapper objectMapper;
 
     @PostMapping(RestApiPaths.REGISTER_VISITOR)
@@ -51,12 +57,12 @@ public class SystemController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<RegisterVisitorOutput> registerVisitor(@PathVariable String bookingId,
-                                                                 @RequestBody @Valid RegisterVisitorInput input) {
+    public ResponseEntity<?> registerVisitor(@PathVariable String bookingId,
+                                             @RequestBody RegisterVisitorInput input) {
         input.setBookingId(bookingId);
 
-        RegisterVisitorOutput result = registerVisitorService.registerVisitor(input);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        Either<ErrorOutput, RegisterVisitorOutput> result = registerVisitorOperation.process(input);
+        return getOutput(result, HttpStatus.CREATED);
     }
 
     @GetMapping(RestApiPaths.GET_VISITORS_INFO)
@@ -69,14 +75,14 @@ public class SystemController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<GetRegisteredVisitorsOutput> getVisitorsInfo(@RequestParam(required = false) @Schema(example = "101b") String roomNo,
-                                                                       @RequestParam(required = false) @Schema(example = "vanio") String firstName,
-                                                                       @RequestParam(required = false) @Schema(example = "georgiev") String lastName,
-                                                                       @RequestParam(required = false) @Schema(example = "+359887839281") String phoneNo,
-                                                                       @RequestParam(required = false) @Schema(example = "0348888888") String civilNumber,
-                                                                       @RequestParam(required = false) @Schema(example = "2003-09-22") LocalDate birthday,
-                                                                       @RequestParam(required = false) @Schema(example = "mvr varna") String idIssueAuthority,
-                                                                       @RequestParam(required = false) @Schema(example = "2015-05-22") LocalDate idIssueDate) {
+    public ResponseEntity<?> getVisitorsInfo(@RequestParam(required = false) @Schema(example = "101b") String roomNo,
+                                             @RequestParam(required = false) @Schema(example = "vanio") String firstName,
+                                             @RequestParam(required = false) @Schema(example = "georgiev") String lastName,
+                                             @RequestParam(required = false) @Schema(example = "+359887839281") String phoneNo,
+                                             @RequestParam(required = false) @Schema(example = "0348888888") String civilNumber,
+                                             @RequestParam(required = false) @Schema(example = "2003-09-22") LocalDate birthday,
+                                             @RequestParam(required = false) @Schema(example = "mvr varna") String idIssueAuthority,
+                                             @RequestParam(required = false) @Schema(example = "2015-05-22") LocalDate idIssueDate) {
         HotelVisitorInput visitor = HotelVisitorInput.builder()
                 .firstName(firstName)
                 .lastName(lastName)
@@ -92,8 +98,8 @@ public class SystemController {
                 .visitor(visitor)
                 .build();
 
-        GetRegisteredVisitorsOutput result = getVisitorsInfoService.getVisitorsInfo(input);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        Either<ErrorOutput, GetRegisteredVisitorsOutput> result = getVisitorsInfoOperation.process(input);
+        return getOutput(result, HttpStatus.OK);
     }
 
     @PostMapping(RestApiPaths.CREATE_ROOM)
@@ -106,9 +112,9 @@ public class SystemController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<CreateRoomOutput> createRoom(@RequestBody @Valid CreateRoomInput input) {
-        CreateRoomOutput result = createRoomService.createRoom(input);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    public ResponseEntity<?> createRoom(@RequestBody CreateRoomInput input) {
+        Either<ErrorOutput, CreateRoomOutput> result = createRoomOperation.process(input);
+        return getOutput(result, HttpStatus.CREATED);
     }
 
     @PutMapping(RestApiPaths.UPDATE_ROOM)
@@ -121,12 +127,12 @@ public class SystemController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<UpdateRoomOutput> updateRoom(@PathVariable String roomId,
-                                                       @RequestBody @Valid UpdateRoomInput input) {
+    public ResponseEntity<?> updateRoom(@PathVariable String roomId,
+                                        @RequestBody UpdateRoomInput input) {
         input.setRoomId(roomId);
 
-        UpdateRoomOutput result = updateRoomService.updateRoom(input);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        Either<ErrorOutput, UpdateRoomOutput> result = updateRoomOperation.process(input);
+        return getOutput(result, HttpStatus.OK);
     }
 
     @PatchMapping(
@@ -141,11 +147,11 @@ public class SystemController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<PartialUpdateRoomOutput> partialUpdateRoom(@PathVariable @Schema(example = "15") String roomId,
-                                                                     @RequestBody @Valid PartialUpdateRoomInput input) {
+    public ResponseEntity<?> partialUpdateRoom(@PathVariable @Schema(example = "15") String roomId,
+                                               @RequestBody PartialUpdateRoomInput input) {
         input.setRoomId(roomId);
-        PartialUpdateRoomOutput result = partialUpdateRoomService.partialUpdateRoom(input);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        Either<ErrorOutput, PartialUpdateRoomOutput> result = partialUpdateRoomOperation.process(input);
+        return getOutput(result, HttpStatus.OK);
     }
 
     @DeleteMapping(RestApiPaths.DELETE_ROOM)
@@ -158,12 +164,12 @@ public class SystemController {
             @ApiResponse(responseCode = "400", description = "bad request"),
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
-    public ResponseEntity<DeleteRoomOutput> deleteRoom(@PathVariable String roomId) {
+    public ResponseEntity<?> deleteRoom(@PathVariable String roomId) {
         DeleteRoomInput input = DeleteRoomInput.builder()
                 .roomId(roomId)
                 .build();
 
-        DeleteRoomOutput result = deleteRoomService.deleteRoom(input);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        Either<ErrorOutput, DeleteRoomOutput> result = deleteRoomOperation.process(input);
+        return getOutput(result, HttpStatus.OK);
     }
 }

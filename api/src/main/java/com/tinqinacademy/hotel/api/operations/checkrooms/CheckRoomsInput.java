@@ -1,5 +1,6 @@
 package com.tinqinacademy.hotel.api.operations.checkrooms;
 
+import com.tinqinacademy.hotel.api.contracts.base.OperationInput;
 import com.tinqinacademy.hotel.persistence.enums.BathroomType;
 import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @ToString
 @Getter
 @Setter
-public class CheckRoomsInput {
+public class CheckRoomsInput implements OperationInput {
     @Schema(example = "2022-05-22")
     private LocalDate startDate;
 

@@ -1,5 +1,6 @@
 package com.tinqinacademy.hotel.api.operations.deleteroom;
 
+import com.tinqinacademy.hotel.api.contracts.base.OperationOutput;
 import lombok.*;
 
 @NoArgsConstructor
@@ -8,5 +9,5 @@ import lombok.*;
 @ToString
 @Getter
 @Setter
-public class DeleteRoomOutput {
+public class DeleteRoomOutput implements OperationOutput {
 }
