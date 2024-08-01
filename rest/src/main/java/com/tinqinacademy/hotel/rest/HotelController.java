@@ -51,14 +51,16 @@ public class HotelController extends BaseController {
             @ApiResponse(responseCode = "400", description = "bad request")
     })
     public ResponseEntity<?> checkRoomAvailability(@RequestParam(required = false) @Schema(example = "2021-05-22") LocalDate startDate,
-                                                                           @RequestParam(required = false) @Schema(example = "2021-05-25") LocalDate endDate,
-                                                                           @RequestParam(required = false) @Schema(example = "kingSize") String bedSize,
-                                                                           @RequestParam(required = false) @Schema(example = "private") String bathroomType) {
+                                                   @RequestParam(required = false) @Schema(example = "2021-05-25") LocalDate endDate,
+                                                   @RequestParam(required = false) @Schema(example = "kingSize") String bedSize,
+                                                   @RequestParam(required = false) @Schema(example = "private") String bathroomType,
+                                                   @RequestParam(required = false) @Schema(example = "2") Integer bedCount) {
         CheckRoomsInput input = CheckRoomsInput.builder()
                 .startDate(startDate)
                 .endDate(endDate)
                 .bedSize(BedSize.getBedSize(bedSize))
                 .bathroomType(BathroomType.getBathroomType(bathroomType))
+                .bedCount(bedCount)
                 .build();
 
         Either<ErrorOutput, CheckRoomsOutput> result = checkRoomAvailabilityOperation.process(input);
@@ -80,7 +82,7 @@ public class HotelController extends BaseController {
                 .build();
 
         Either<ErrorOutput, GetRoomByIdOutput> result = getRoomInfoOperation.process(input);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return getOutput(result, HttpStatus.OK);
     }
 
     @PostMapping(RestApiPaths.BOOK_ROOM)
@@ -94,7 +96,7 @@ public class HotelController extends BaseController {
             @ApiResponse(responseCode = "403", description = "forbidden")
     })
     public ResponseEntity<?> bookRoom(@PathVariable @Schema(example = "15") String roomId,
-                                                   @RequestBody BookRoomInput input) {
+                                      @RequestBody BookRoomInput input) {
         input.setRoomId(roomId);
 
         Either<ErrorOutput, BookRoomOutput> result = bookRoomOperation.process(input);

@@ -24,6 +24,9 @@ public class CheckRoomsInput implements OperationInput {
     @Schema(example = "kingSize")
     private BedSize bedSize;
 
+    @Schema(example = "2")
+    private Integer bedCount;
+
     @Schema(example = "private")
     private BathroomType bathroomType;
 }

@@ -2,28 +2,21 @@ package com.tinqinacademy.hotel.core.processors;
 
 import com.tinqinacademy.hotel.api.errors.ErrorMapper;
 import com.tinqinacademy.hotel.api.errors.ErrorOutput;
-import com.tinqinacademy.hotel.api.errors.Errors;
-import com.tinqinacademy.hotel.api.exceptions.InvalidInputException;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomAvailability;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomsInput;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomsOutput;
 import com.tinqinacademy.hotel.persistence.repositories.BookingRepository;
-import io.vavr.API;
 import io.vavr.control.Either;
 import io.vavr.control.Try;
 import jakarta.validation.Validator;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import static io.vavr.API.*;
-import static io.vavr.Predicates.instanceOf;
-import io.vavr.API;
-import io.vavr.control.Either;
-import io.vavr.control.Try;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,9 +55,13 @@ public class CheckRoomAvailabilityOperation extends BaseOperation implements Che
     }
 
     private List<UUID> getRoomIds(CheckRoomsInput input) {
-        return bookingRepository.searchRooms(input.getStartDate(),
-                input.getEndDate(),
-                input.getBedSize(),
-                input.getBathroomType());
+        List<UUID> roomIds = new ArrayList<>();
+        bookingRepository.findBookingsByStartDateAndEndDateAndBedSizeAndBathroomTypeAndBedCount(input.getStartDate(),
+                        input.getEndDate(),
+                        input.getBedSize(),
+                        input.getBathroomType(),
+                        input.getBedCount())
+                .forEach(booking -> roomIds.add(booking.getRoom().getId()));
+        return roomIds;
     }
 }

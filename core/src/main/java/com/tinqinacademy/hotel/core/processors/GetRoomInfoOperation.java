@@ -51,11 +51,11 @@ public class GetRoomInfoOperation extends BaseOperation implements GetRoomInfo {
 
             Room room = findRoomByInput(input);
 
-            Booking booking = findBookingByRoom(room);
+            List<Booking> bookings = findBookingsByRoom(room);
 
             GetRoomByIdOutput result = conversionService.convert(room, GetRoomByIdOutput.class);
 
-            List<LocalDate> datesOccupied = getDatesOccupiedFromBooking(booking);
+            List<LocalDate> datesOccupied = getDatesOccupiedFromBookings(bookings);
 
             result.setDatesOccupied(datesOccupied);
 
@@ -72,9 +72,8 @@ public class GetRoomInfoOperation extends BaseOperation implements GetRoomInfo {
                 ));
     }
 
-    private Booking findBookingByRoom(Room room) {
-        return bookingRepository.findByRoomId(room.getId())
-                .orElseThrow(BookingNotFoundException::new);
+    private List<Booking> findBookingsByRoom(Room room) {
+        return bookingRepository.findBookingsByRoomId(room.getId());
     }
 
     private Room findRoomByInput(GetRoomByIdInput input) {
@@ -82,11 +81,13 @@ public class GetRoomInfoOperation extends BaseOperation implements GetRoomInfo {
                 .orElseThrow(RoomNotFoundException::new);
     }
 
-    private List<LocalDate> getDatesOccupiedFromBooking(Booking booking) {
+    private List<LocalDate> getDatesOccupiedFromBookings(List<Booking> bookings) {
         List<LocalDate> datesOccupied = new ArrayList<>();
 
-        datesOccupied.add(booking.getStartDate());
-        datesOccupied.add(booking.getEndDate());
+        bookings.forEach(booking -> {
+            datesOccupied.add(booking.getStartDate());
+            datesOccupied.add(booking.getEndDate());
+        });
 
         return datesOccupied;
     }

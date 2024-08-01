@@ -61,10 +61,10 @@ public abstract class BaseOperation {
 
     protected API.Match.Case<InvalidInputException, ErrorOutput> validateCase(Throwable cause,
                                                                               HttpStatus status) {
-        InvalidInputException ex = (InvalidInputException) cause;
+        List<Errors> errors = cause instanceof InvalidInputException ex ? ex.getErrors() : new ArrayList<>();
 
         return API.Case($(instanceOf(InvalidInputException.class)), () -> ErrorOutput.builder()
-                .errors(ex.getErrors())
+                .errors(errors)
                 .status(status)
                 .build());
     }

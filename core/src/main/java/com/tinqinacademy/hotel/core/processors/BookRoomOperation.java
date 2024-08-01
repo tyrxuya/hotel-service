@@ -29,6 +29,7 @@ import static io.vavr.API.*;
 import static io.vavr.Predicates.instanceOf;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
@@ -94,15 +95,19 @@ public class BookRoomOperation extends BaseOperation implements BookRoom {
 
         BigDecimal daysDecimal = BigDecimal.valueOf(days);
 
-        return daysDecimal.multiply(room.getPrice());
+        BigDecimal finalPrice = daysDecimal.multiply(room.getPrice());
+
+        return finalPrice;
     }
 
     private void checkIsRoomPresent(BookRoomInput input) {
-        bookingRepository.searchRooms(input.getStartDate(), input.getEndDate())
+        Boolean present = bookingRepository.searchRooms(input.getStartDate(), input.getEndDate())
                 .stream()
-                .filter(id -> UUID.fromString(input.getRoomId()).equals(id))
-                .findFirst()
-                .orElseThrow(RoomNotFoundException::new);
+                .anyMatch(id -> UUID.fromString(input.getRoomId()).equals(id));
+
+        if (present) {
+            throw new RoomNotFoundException();
+        }
     }
 
     private Room getRoomFromRepository(BookRoomInput input) {
