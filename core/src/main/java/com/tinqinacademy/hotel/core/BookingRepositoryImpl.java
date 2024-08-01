@@ -55,7 +55,7 @@ public class BookingRepositoryImpl implements BookingRepositoryCustom {
         }
 
         if (bedCount != null) {
-            predicates.add(cb.equal(bedCountSubquery.select(cb.count(root.get("room").get("beds").get("bedSize"))), bedCount));
+            predicates.add(cb.equal(bedCountSubquery.select(cb.countDistinct(root.get("room").get("beds").get("bedSize"))), bedCount));
         }
 
         return em.createQuery(cq.where(predicates.toArray(new Predicate[0]))).getResultList();
