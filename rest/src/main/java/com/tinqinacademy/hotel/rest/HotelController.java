@@ -58,8 +58,8 @@ public class HotelController extends BaseController {
         CheckRoomsInput input = CheckRoomsInput.builder()
                 .startDate(startDate)
                 .endDate(endDate)
-                .bedSize(BedSize.getBedSize(bedSize))
-                .bathroomType(BathroomType.getBathroomType(bathroomType))
+                .bedSize(bedSize)
+                .bathroomType(bathroomType)
                 .bedCount(bedCount)
                 .build();
 

@@ -15,6 +15,7 @@ import java.awt.print.Book;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -38,8 +39,6 @@ public class BookingRepositoryImpl implements BookingRepositoryCustom {
         List<Predicate> predicates = new ArrayList<>();
 
         Subquery<Long> bedCountSubquery = cq.subquery(Long.class);
-        Root<Room> subqueryRoom = bedCountSubquery.from(Room.class);
-        Join<Room, Bed> subqueryRoomBedJoin = subqueryRoom.join("beds", JoinType.INNER);
 
         if (from != null && to != null) {
             predicates.add(cb.greaterThanOrEqualTo(root.get("startDate"), from));
@@ -55,7 +54,7 @@ public class BookingRepositoryImpl implements BookingRepositoryCustom {
         }
 
         if (bedCount != null) {
-            predicates.add(cb.equal(bedCountSubquery.select(cb.countDistinct(root.get("room").get("beds").get("bedSize"))), bedCount));
+            predicates.add(cb.equal(bedCountSubquery.select(cb.countDistinct(root.get("room").get("beds").get("id"))), bedCount));
         }
 
         return em.createQuery(cq.where(predicates.toArray(new Predicate[0]))).getResultList();

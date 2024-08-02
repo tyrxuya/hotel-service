@@ -1,8 +1,10 @@
 package com.tinqinacademy.hotel.api.operations.createroom;
 
 import com.tinqinacademy.hotel.api.contracts.base.OperationInput;
+import com.tinqinacademy.hotel.api.enums.BedSize;
+import com.tinqinacademy.hotel.api.validators.bathroomtype.ValidBathroomType;
+import com.tinqinacademy.hotel.api.validators.bedsize.ValidBedSize;
 import com.tinqinacademy.hotel.persistence.enums.BathroomType;
-import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -17,10 +19,11 @@ import java.util.List;
 @Getter
 @Setter
 public class CreateRoomInput implements OperationInput {
-    private List<BedSize> bedSizes;
+    private List<@ValidBedSize String> bedSizes;
 
     @Schema(example = "shared")
-    private BathroomType bathroomType;
+    @ValidBathroomType
+    private String bathroomType;
 
     @Schema(example = "7")
     @Min(value = 1, message = "floor cannot be less than 1")

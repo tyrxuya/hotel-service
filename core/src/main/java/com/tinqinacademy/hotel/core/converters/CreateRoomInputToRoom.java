@@ -3,6 +3,7 @@ package com.tinqinacademy.hotel.core.converters;
 import com.tinqinacademy.hotel.api.operations.createroom.CreateRoomInput;
 import com.tinqinacademy.hotel.persistence.entities.Bed;
 import com.tinqinacademy.hotel.persistence.entities.Room;
+import com.tinqinacademy.hotel.persistence.enums.BathroomType;
 import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,7 @@ public class CreateRoomInputToRoom extends AbstractConverter<CreateRoomInput, Ro
     protected Room doConvert(CreateRoomInput source) {
         Room result = Room.builder()
                 .number(source.getRoomNo())
-                .bathroomType(source.getBathroomType())
+                .bathroomType(BathroomType.getBathroomType(source.getBathroomType()))
                 .price(source.getPrice())
                 .floor(source.getFloor())
                 .build();

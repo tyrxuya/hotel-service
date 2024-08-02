@@ -72,7 +72,10 @@ public class CreateRoomOperation extends BaseOperation implements CreateRoom {
     }
 
     private List<Bed> createBeds(CreateRoomInput input) {
-        List<BedSize> bedSizes = new ArrayList<>(input.getBedSizes());
+        List<BedSize> bedSizes = new ArrayList<>();
+
+        input.getBedSizes()
+                .forEach(bedSize -> bedSizes.add(BedSize.getBedSize(bedSize)));
 
         List<Bed> beds = new ArrayList<>();
         bedSizes.forEach(bedSize -> {

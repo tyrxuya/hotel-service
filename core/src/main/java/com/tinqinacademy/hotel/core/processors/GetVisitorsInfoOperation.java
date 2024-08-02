@@ -6,6 +6,7 @@ import com.tinqinacademy.hotel.api.exceptions.InvalidInputException;
 import com.tinqinacademy.hotel.api.operations.getregisteredvisitors.GetRegisteredVisitorsInput;
 import com.tinqinacademy.hotel.api.operations.getregisteredvisitors.GetRegisteredVisitorsOutput;
 import com.tinqinacademy.hotel.api.operations.getregisteredvisitors.GetVisitorsInfo;
+import com.tinqinacademy.hotel.api.operations.hotelvisitor.HotelVisitorOutput;
 import com.tinqinacademy.hotel.persistence.entities.Guest;
 import com.tinqinacademy.hotel.persistence.repositories.GuestRepository;
 import io.vavr.API;
@@ -18,6 +19,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static io.vavr.API.*;
@@ -40,9 +42,10 @@ public class GetVisitorsInfoOperation extends BaseOperation implements GetVisito
             validate(input);
 
             List<Guest> guests = searchGuestsFromRepository(input);
+            List<HotelVisitorOutput> hotelVisitors = getHotelVisitorsFromGuests(guests);
 
             GetRegisteredVisitorsOutput result = GetRegisteredVisitorsOutput.builder()
-                    .hotelVisitors(conversionService.convert(guests, List.class))
+                    .hotelVisitors(hotelVisitors)
                     .build();
 
             log.info("end getVisitorsInfo result: {}", result);
@@ -54,6 +57,14 @@ public class GetVisitorsInfoOperation extends BaseOperation implements GetVisito
                         validateCase(throwable, HttpStatus.BAD_REQUEST),
                         defaultCase(throwable, HttpStatus.I_AM_A_TEAPOT)
                 ));
+    }
+
+    private List<HotelVisitorOutput> getHotelVisitorsFromGuests(List<Guest> guests) {
+        List<HotelVisitorOutput> hotelVisitors = new ArrayList<>();
+
+        guests.forEach(guest -> hotelVisitors.add(conversionService.convert(guest, HotelVisitorOutput.class)));
+
+        return hotelVisitors;
     }
 
     private List<Guest> searchGuestsFromRepository(GetRegisteredVisitorsInput input) {

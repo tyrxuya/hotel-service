@@ -18,6 +18,5 @@ public class RegisterVisitorInput implements OperationInput {
     @JsonIgnore
     private String bookingId;
 
-    @Valid
-    private List<HotelVisitorInput> hotelVisitors;
+    private List<@Valid HotelVisitorInput> hotelVisitors;
 }

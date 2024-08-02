@@ -10,6 +10,7 @@ import com.tinqinacademy.hotel.api.operations.updateroom.UpdateRoom;
 import com.tinqinacademy.hotel.api.operations.updateroom.UpdateRoomOutput;
 import com.tinqinacademy.hotel.persistence.entities.Bed;
 import com.tinqinacademy.hotel.persistence.entities.Room;
+import com.tinqinacademy.hotel.persistence.enums.BathroomType;
 import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import com.tinqinacademy.hotel.persistence.repositories.BedRepository;
 import com.tinqinacademy.hotel.persistence.repositories.RoomRepository;
@@ -75,14 +76,14 @@ public class UpdateRoomOperation extends BaseOperation implements UpdateRoom {
     }
 
     private void updateRoom(UpdateRoomInput input, Room room) {
-        room.setBathroomType(input.getBathroomType());
+        room.setBathroomType(BathroomType.getBathroomType(input.getBathroomType()));
         room.setFloor(input.getFloor());
         room.setPrice(input.getPrice());
         room.setNumber(input.getRoomNo());
 
         List<Bed> beds = new ArrayList<>();
         input.getBedSizes().forEach(bedSize -> {
-            Bed bed = getBedByBedSizeFromRepository(bedSize);
+            Bed bed = getBedByBedSizeFromRepository(BedSize.getBedSize(bedSize));
             beds.add(bed);
         });
 

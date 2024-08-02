@@ -11,6 +11,7 @@ import com.tinqinacademy.hotel.api.operations.partialupdateroom.PartialUpdateRoo
 import com.tinqinacademy.hotel.api.operations.partialupdateroom.PartialUpdateRoomOutput;
 import com.tinqinacademy.hotel.persistence.entities.Bed;
 import com.tinqinacademy.hotel.persistence.entities.Room;
+import com.tinqinacademy.hotel.persistence.enums.BathroomType;
 import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import com.tinqinacademy.hotel.persistence.repositories.BedRepository;
 import com.tinqinacademy.hotel.persistence.repositories.RoomRepository;
@@ -48,13 +49,15 @@ public class PartialUpdateRoomOperation extends BaseOperation implements Partial
 
             validate(input);
 
-            PartialUpdateRoomOutput result = PartialUpdateRoomOutput.builder().build();
-
             Room room = getRoomFromRepository(input);
 
             setNonNullAttributes(input, room);
 
             roomRepository.save(room);
+
+            PartialUpdateRoomOutput result = PartialUpdateRoomOutput.builder()
+                    .roomId(room.getId().toString())
+                    .build();
 
             log.info("end partialUpdateRoom result: {}", result);
 
@@ -74,7 +77,7 @@ public class PartialUpdateRoomOperation extends BaseOperation implements Partial
                 .ifPresent(room::setNumber);
 
         Optional.ofNullable(input.getBathroomType())
-                .ifPresent(room::setBathroomType);
+                .ifPresent(bathroomType -> room.setBathroomType(BathroomType.valueOf(bathroomType)));
 
         Optional.ofNullable(input.getFloor())
                 .ifPresent(room::setFloor);
@@ -84,7 +87,9 @@ public class PartialUpdateRoomOperation extends BaseOperation implements Partial
 
         Optional.ofNullable(input.getBedSizes())
                 .ifPresent(bedSizes -> {
-                    List<Bed> beds = getBedsFromRepository(bedSizes);
+                    List<BedSize> bedSizesList = new ArrayList<>();
+                    bedSizes.forEach(bedSize -> bedSizesList.add(BedSize.getBedSize(bedSize)));
+                    List<Bed> beds = getBedsFromRepository(bedSizesList);
                     room.setBeds(beds);
                 });
     }

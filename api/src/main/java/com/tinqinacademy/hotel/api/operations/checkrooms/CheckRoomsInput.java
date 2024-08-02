@@ -1,6 +1,8 @@
 package com.tinqinacademy.hotel.api.operations.checkrooms;
 
 import com.tinqinacademy.hotel.api.contracts.base.OperationInput;
+import com.tinqinacademy.hotel.api.validators.bathroomtype.ValidBathroomType;
+import com.tinqinacademy.hotel.api.validators.bedsize.ValidBedSize;
 import com.tinqinacademy.hotel.persistence.enums.BathroomType;
 import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,11 +24,13 @@ public class CheckRoomsInput implements OperationInput {
     private LocalDate endDate;
 
     @Schema(example = "kingSize")
-    private BedSize bedSize;
+    @ValidBedSize(optional = true)
+    private String bedSize;
 
     @Schema(example = "2")
     private Integer bedCount;
 
     @Schema(example = "private")
-    private BathroomType bathroomType;
+    @ValidBathroomType(optional = true)
+    private String bathroomType;
 }

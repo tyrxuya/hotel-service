@@ -5,6 +5,8 @@ import com.tinqinacademy.hotel.api.errors.ErrorOutput;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomAvailability;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomsInput;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomsOutput;
+import com.tinqinacademy.hotel.persistence.enums.BathroomType;
+import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import com.tinqinacademy.hotel.persistence.repositories.BookingRepository;
 import io.vavr.control.Either;
 import io.vavr.control.Try;
@@ -58,8 +60,8 @@ public class CheckRoomAvailabilityOperation extends BaseOperation implements Che
         List<UUID> roomIds = new ArrayList<>();
         bookingRepository.findBookingsByStartDateAndEndDateAndBedSizeAndBathroomTypeAndBedCount(input.getStartDate(),
                         input.getEndDate(),
-                        input.getBedSize(),
-                        input.getBathroomType(),
+                        BedSize.getBedSize(input.getBedSize()),
+                        BathroomType.getBathroomType(input.getBathroomType()),
                         input.getBedCount())
                 .forEach(booking -> roomIds.add(booking.getRoom().getId()));
         return roomIds;

@@ -2,6 +2,8 @@ package com.tinqinacademy.hotel.api.operations.partialupdateroom;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tinqinacademy.hotel.api.contracts.base.OperationInput;
+import com.tinqinacademy.hotel.api.validators.bathroomtype.ValidBathroomType;
+import com.tinqinacademy.hotel.api.validators.bedsize.ValidBedSize;
 import com.tinqinacademy.hotel.persistence.enums.BathroomType;
 import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,10 +23,11 @@ public class PartialUpdateRoomInput implements OperationInput {
     @JsonIgnore
     private String roomId;
 
-    private List<BedSize> bedSizes;
+    private List<@ValidBedSize(optional = true) String> bedSizes;
 
     @Schema(example = "shared")
-    private BathroomType bathroomType;
+    @ValidBathroomType(optional = true)
+    private String bathroomType;
 
     @Schema(example = "7")
     @Min(value = 1, message = "floor cannot be less than 1")

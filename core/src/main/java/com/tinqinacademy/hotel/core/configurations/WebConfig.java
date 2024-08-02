@@ -10,9 +10,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new CreateRoomInputToRoom());
-        registry.addConverter(new GuestsToHotelVisitorOutput());
+        registry.addConverter(new GuestToHotelVisitorOutput());
         registry.addConverter(new RoomToGetRoomByIdOutputConverter());
         registry.addConverter(new CreateUserInputToUser());
         registry.addConverter(new UserToGetUserOutput());
+        registry.addConverter(new HotelVisitorInputToGuest());
     }
 }

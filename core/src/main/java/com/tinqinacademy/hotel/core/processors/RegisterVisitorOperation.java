@@ -80,18 +80,7 @@ public class RegisterVisitorOperation extends BaseOperation implements RegisterV
     private List<Guest> initializeGuestList(List<HotelVisitorInput> hotelVisitors) {
         List<Guest> guests = new ArrayList<>();
 
-        hotelVisitors
-                .forEach(guest ->
-                        guests.add(Guest.builder()
-                                .firstName(guest.getFirstName())
-                                .lastName(guest.getLastName())
-                                .phone(guest.getPhoneNo())
-                                .birthday(guest.getBirthday())
-                                .civilNumber(guest.getCivilNumber())
-                                .idIssueAuthority(guest.getIdIssueAuthority())
-                                .idIssueDate(guest.getIdIssueDate())
-                                .idValidity(guest.getIdValidity())
-                                .build()));
+        hotelVisitors.forEach(guest -> guests.add(conversionService.convert(guest, Guest.class)));
 
         return guests;
     }
