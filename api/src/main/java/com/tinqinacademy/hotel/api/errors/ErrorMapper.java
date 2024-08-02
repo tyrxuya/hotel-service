@@ -17,7 +17,6 @@ import java.util.List;
 @Component
 public class ErrorMapper {
     private final ErrorOutput errorOutput;
-    private final View error;
 
     public <T extends Throwable> ErrorOutput map(T throwable, HttpStatus httpStatus) {
         errorOutput.setErrors(List.of(Errors.builder()

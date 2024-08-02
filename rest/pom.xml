@@ -5,14 +5,14 @@
     <artifactId>rest</artifactId>
 
     <parent>
-        <groupId>com.tinqinacademy</groupId>
+        <groupId>com.tinqinacademy.hotel</groupId>
         <artifactId>hotel</artifactId>
         <version>${revision}</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>com.tinqinacademy</groupId>
+            <groupId>com.tinqinacademy.hotel</groupId>
             <artifactId>core</artifactId>
             <version>${revision}</version>
         </dependency>
@@ -24,11 +24,6 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.java-json-tools</groupId>
-            <artifactId>json-patch</artifactId>
-            <version>1.12</version>
         </dependency>
     </dependencies>
 
