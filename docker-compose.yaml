@@ -14,19 +14,6 @@ services:
       - POSTGRES_USER=tyrxuya
       - POSTGRES_DB=hotel
 
-  commentdb:
-    image: postgres
-    networks:
-      - hotel
-    ports:
-      - "5433:5432"
-    volumes:
-      - commentdb:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=12345
-      - POSTGRES_USER=tyrxuya
-      - POSTGRES_DB=comments
-
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
@@ -49,4 +36,3 @@ networks:
 volumes:
   hoteldb:
   pgadmin_data:
-  commentdb:
