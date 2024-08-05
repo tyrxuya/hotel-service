@@ -9,6 +9,7 @@ services:
       - "5432:5432"
     volumes:
       - hoteldb:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       - POSTGRES_PASSWORD=1234
       - POSTGRES_USER=tyrxuya
