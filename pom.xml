@@ -33,6 +33,7 @@
         <swagger.version>2.6.0</swagger.version>
         <flatten.version>1.6.0</flatten.version>
         <vavr.version>0.10.4</vavr.version>
+        <sbadmin.version>3.3.3</sbadmin.version>
     </properties>
 
     <dependencies>
@@ -52,6 +53,18 @@
             <version>${swagger.version}</version>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-dependencies</artifactId>
+                <version>${sbadmin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
