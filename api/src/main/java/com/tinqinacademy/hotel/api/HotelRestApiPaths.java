@@ -1,6 +1,6 @@
 package com.tinqinacademy.hotel.api;
 
-public class RestApiPaths {
+public class HotelRestApiPaths {
     public static final String API_V1 = "/api/v1";
     public static final String HOTEL = API_V1 + "/hotel";
     public static final String SYSTEM = API_V1 + "/system";

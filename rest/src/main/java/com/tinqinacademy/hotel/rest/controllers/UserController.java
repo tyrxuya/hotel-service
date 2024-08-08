@@ -1,7 +1,7 @@
 package com.tinqinacademy.hotel.rest.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tinqinacademy.hotel.api.RestApiPaths;
+import com.tinqinacademy.hotel.api.HotelRestApiPaths;
 import com.tinqinacademy.hotel.api.errors.ErrorOutput;
 import com.tinqinacademy.hotel.api.operations.createuser.CreateUser;
 import com.tinqinacademy.hotel.api.operations.deleteuser.DeleteUser;
@@ -28,14 +28,14 @@ public class UserController extends BaseController {
     private final GetUser getUserOperation;
     private final ObjectMapper objectMapper;
 
-    @PostMapping(RestApiPaths.CREATE_USER)
+    @PostMapping(HotelRestApiPaths.CREATE_USER)
     public ResponseEntity<?> createUser(@RequestBody CreateUserInput input) {
         Either<ErrorOutput, CreateUserOutput> result = createUserOperation.process(input);
 
         return getOutput(result, HttpStatus.CREATED);
     }
 
-    @DeleteMapping(RestApiPaths.DELETE_USER)
+    @DeleteMapping(HotelRestApiPaths.DELETE_USER)
     public ResponseEntity<?> deleteUser(@PathVariable String userId) {
         DeleteUserInput input = DeleteUserInput.builder()
                 .userId(userId)
@@ -46,7 +46,7 @@ public class UserController extends BaseController {
         return getOutput(result, HttpStatus.OK);
     }
 
-    @GetMapping(RestApiPaths.GET_USER)
+    @GetMapping(HotelRestApiPaths.GET_USER)
     public ResponseEntity<?> getUser(@PathVariable String userId) {
         GetUserInput input = GetUserInput.builder()
                 .userId(userId)
