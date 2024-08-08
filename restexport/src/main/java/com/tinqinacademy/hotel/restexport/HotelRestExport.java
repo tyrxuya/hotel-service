@@ -46,11 +46,11 @@ public interface HotelRestExport {
     @RequestLine("DELETE /api/v1/hotel/{bookingId}")
     UnbookRoomOutput unbookRoom(@Param String bookingId);
 
-    @RequestLine("POST /api/vi/system/register/{bookingId}")
+    @RequestLine("POST /api/v1/system/register/{bookingId}")
     RegisterVisitorOutput registerVisitor(@Param String bookingId,
                                           RegisterVisitorInput input);
 
-    @RequestLine("GET /api/vi/system/register?roomNo={roomNo}&firstName={firstName}&lastName={lastName}&phoneNo={phoneNo}&civilNumber={civilNumber}&birthday={birthday}&idIssueAuthority={idIssueAuthority}&idIssueDate={idIssueDate}")
+    @RequestLine("GET /api/v1/system/register?roomNo={roomNo}&firstName={firstName}&lastName={lastName}&phoneNo={phoneNo}&civilNumber={civilNumber}&birthday={birthday}&idIssueAuthority={idIssueAuthority}&idIssueDate={idIssueDate}")
     GetRegisteredVisitorsOutput getRegisteredVisitors(@Param String roomNo,
                                                       @Param String firstName,
                                                       @Param String lastName,
@@ -60,18 +60,18 @@ public interface HotelRestExport {
                                                       @Param String idIssueAuthority,
                                                       @Param LocalDate idIssueDate);
 
-    @RequestLine("POST /api/vi/system/room")
+    @RequestLine("POST /api/v1/system/room")
     CreateRoomOutput createRoom(CreateRoomInput input);
 
-    @RequestLine("PUT /api/vi/system/room/{roomId}")
+    @RequestLine("PUT /api/v1/system/room/{roomId}")
     UpdateRoomOutput updateRoom(@Param String roomId,
                                 UpdateRoomInput input);
 
-    @RequestLine("PATCH /api/vi/system/room/{roomId}")
+    @RequestLine("PATCH /api/v1/system/room/{roomId}")
     PartialUpdateRoomOutput partialUpdateRoom(@Param String roomId,
                                               PartialUpdateRoomInput input);
 
-    @RequestLine("DELETE /api/vi/system/room/{roomId}")
+    @RequestLine("DELETE /api/v1/system/room/{roomId}")
     DeleteRoomOutput deleteRoom(@Param String roomId);
 
     @RequestLine("POST /api/v1/user")

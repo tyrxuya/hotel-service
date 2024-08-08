@@ -1,6 +1,7 @@
-package com.tinqinacademy.hotel.rest;
+package com.tinqinacademy.hotel.rest.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tinqinacademy.hotel.api.RestApiPaths;
 import com.tinqinacademy.hotel.api.errors.ErrorOutput;
 import com.tinqinacademy.hotel.api.operations.createuser.CreateUser;
 import com.tinqinacademy.hotel.api.operations.deleteuser.DeleteUser;

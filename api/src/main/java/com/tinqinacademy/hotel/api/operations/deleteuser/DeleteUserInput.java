@@ -1,6 +1,6 @@
 package com.tinqinacademy.hotel.api.operations.deleteuser;
 
-import com.tinqinacademy.hotel.api.contracts.base.OperationInput;
+import com.tinqinacademy.hotel.api.base.OperationInput;
 import lombok.*;
 
 @NoArgsConstructor

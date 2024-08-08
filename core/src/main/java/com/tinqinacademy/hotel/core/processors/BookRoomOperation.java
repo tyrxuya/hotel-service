@@ -65,7 +65,9 @@ public class BookRoomOperation extends BaseOperation implements BookRoom {
 
             bookingRepository.save(booking);
 
-            BookRoomOutput result = BookRoomOutput.builder().build();
+            BookRoomOutput result = BookRoomOutput.builder()
+                    .bookingId(booking.getId().toString())
+                    .build();
 
             log.info("end bookRoom result: {}", result);
 

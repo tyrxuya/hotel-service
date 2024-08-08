@@ -1,6 +1,6 @@
 package com.tinqinacademy.hotel.api.operations.hotelvisitor;
 
-import com.tinqinacademy.hotel.api.contracts.base.OperationOutput;
+import com.tinqinacademy.hotel.api.base.OperationOutput;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
