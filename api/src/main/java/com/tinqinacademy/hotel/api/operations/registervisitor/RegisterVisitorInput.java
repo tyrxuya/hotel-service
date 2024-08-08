@@ -1,7 +1,7 @@
 package com.tinqinacademy.hotel.api.operations.registervisitor;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tinqinacademy.hotel.api.contracts.base.OperationInput;
+import com.tinqinacademy.hotel.api.base.OperationInput;
 import com.tinqinacademy.hotel.api.operations.hotelvisitor.HotelVisitorInput;
 import jakarta.validation.Valid;
 import lombok.*;

@@ -1,13 +1,11 @@
 package com.tinqinacademy.hotel.core.processors;
 
-import com.tinqinacademy.hotel.api.contracts.base.OperationInput;
+import com.tinqinacademy.hotel.api.base.OperationInput;
 import com.tinqinacademy.hotel.api.errors.ErrorMapper;
 import com.tinqinacademy.hotel.api.errors.ErrorOutput;
 import com.tinqinacademy.hotel.api.errors.Errors;
 import com.tinqinacademy.hotel.api.exceptions.*;
 import io.vavr.API;
-import io.vavr.control.Either;
-import io.vavr.control.Try;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.Getter;
