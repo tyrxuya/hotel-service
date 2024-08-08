@@ -1,5 +1,6 @@
 package com.tinqinacademy.hotel.restexport;
 
+import com.tinqinacademy.hotel.api.HotelFeignClientApiPaths;
 import com.tinqinacademy.hotel.api.operations.bookroom.BookRoomInput;
 import com.tinqinacademy.hotel.api.operations.bookroom.BookRoomOutput;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomsOutput;
@@ -29,28 +30,28 @@ import java.time.LocalDate;
         "Content-Type: application/json"
 })
 public interface HotelRestExport {
-    @RequestLine("GET /api/v1/hotel/rooms?startDate={startDate}&endDate={endDate}&bedSize={bedSize}&bathroomType={bathroomType}&bedCount={bedCount}")
+    @RequestLine(HotelFeignClientApiPaths.CHECK_ROOMS)
     CheckRoomsOutput checkRooms(@Param LocalDate startDate,
                                 @Param LocalDate endDate,
                                 @Param String bedSize,
                                 @Param String bathroomType,
                                 @Param Integer bedCount);
 
-    @RequestLine("GET /api/v1/hotel/{roomId}")
+    @RequestLine(HotelFeignClientApiPaths.GET_ROOM_BY_ID)
     GetRoomByIdOutput getRoomById(@Param String roomId);
 
-    @RequestLine("POST /api/v1/hotel/{roomId}")
-    BookRoomOutput createBookRoom(@Param String roomId,
-                                  BookRoomInput input);
+    @RequestLine(HotelFeignClientApiPaths.BOOK_ROOM)
+    BookRoomOutput bookRoom(@Param String roomId,
+                            BookRoomInput input);
 
-    @RequestLine("DELETE /api/v1/hotel/{bookingId}")
+    @RequestLine(HotelFeignClientApiPaths.UNBOOK_ROOM)
     UnbookRoomOutput unbookRoom(@Param String bookingId);
 
-    @RequestLine("POST /api/v1/system/register/{bookingId}")
+    @RequestLine(HotelFeignClientApiPaths.REGISTER_VISITOR)
     RegisterVisitorOutput registerVisitor(@Param String bookingId,
                                           RegisterVisitorInput input);
 
-    @RequestLine("GET /api/v1/system/register?roomNo={roomNo}&firstName={firstName}&lastName={lastName}&phoneNo={phoneNo}&civilNumber={civilNumber}&birthday={birthday}&idIssueAuthority={idIssueAuthority}&idIssueDate={idIssueDate}")
+    @RequestLine(HotelFeignClientApiPaths.GET_REGISTERED_VISITORS)
     GetRegisteredVisitorsOutput getRegisteredVisitors(@Param String roomNo,
                                                       @Param String firstName,
                                                       @Param String lastName,
@@ -60,26 +61,26 @@ public interface HotelRestExport {
                                                       @Param String idIssueAuthority,
                                                       @Param LocalDate idIssueDate);
 
-    @RequestLine("POST /api/v1/system/room")
+    @RequestLine(HotelFeignClientApiPaths.CREATE_ROOM)
     CreateRoomOutput createRoom(CreateRoomInput input);
 
-    @RequestLine("PUT /api/v1/system/room/{roomId}")
+    @RequestLine(HotelFeignClientApiPaths.UPDATE_ROOM)
     UpdateRoomOutput updateRoom(@Param String roomId,
                                 UpdateRoomInput input);
 
-    @RequestLine("PATCH /api/v1/system/room/{roomId}")
+    @RequestLine(HotelFeignClientApiPaths.PARTIAL_UPDATE_ROOM)
     PartialUpdateRoomOutput partialUpdateRoom(@Param String roomId,
                                               PartialUpdateRoomInput input);
 
-    @RequestLine("DELETE /api/v1/system/room/{roomId}")
+    @RequestLine(HotelFeignClientApiPaths.DELETE_ROOM)
     DeleteRoomOutput deleteRoom(@Param String roomId);
 
-    @RequestLine("POST /api/v1/user")
+    @RequestLine(HotelFeignClientApiPaths.CREATE_USER)
     CreateUserOutput createUser(CreateUserInput input);
 
-    @RequestLine("DELETE /api/v1/user/{userId}")
+    @RequestLine(HotelFeignClientApiPaths.DELETE_USER)
     DeleteUserOutput deleteUser(@Param String userId);
 
-    @RequestLine("GET /api/v1/user/{userId}")
+    @RequestLine(HotelFeignClientApiPaths.GET_USER)
     GetUserOutput getUser(@Param String userId);
 }
