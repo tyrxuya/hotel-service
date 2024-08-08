@@ -1,7 +1,6 @@
-package com.tinqinacademy.hotel.api.contracts.base;
+package com.tinqinacademy.hotel.api.base;
 
 import com.tinqinacademy.hotel.api.errors.ErrorOutput;
-import com.tinqinacademy.hotel.api.errors.Errors;
 import io.vavr.control.Either;
 
 public interface OperationProcessor<S extends OperationInput, T extends OperationOutput> {

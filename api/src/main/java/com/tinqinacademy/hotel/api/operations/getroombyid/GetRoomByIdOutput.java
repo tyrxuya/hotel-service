@@ -1,6 +1,6 @@
 package com.tinqinacademy.hotel.api.operations.getroombyid;
 
-import com.tinqinacademy.hotel.api.contracts.base.OperationOutput;
+import com.tinqinacademy.hotel.api.base.OperationOutput;
 import com.tinqinacademy.hotel.persistence.enums.BathroomType;
 import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import io.swagger.v3.oas.annotations.media.Schema;

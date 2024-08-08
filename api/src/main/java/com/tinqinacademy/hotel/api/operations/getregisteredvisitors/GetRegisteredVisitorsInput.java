@@ -1,6 +1,6 @@
 package com.tinqinacademy.hotel.api.operations.getregisteredvisitors;
 
-import com.tinqinacademy.hotel.api.contracts.base.OperationInput;
+import com.tinqinacademy.hotel.api.base.OperationInput;
 import com.tinqinacademy.hotel.api.operations.hotelvisitor.HotelVisitorInput;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;

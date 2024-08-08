@@ -1,14 +1,12 @@
-package com.tinqinacademy.hotel.rest;
+package com.tinqinacademy.hotel.rest.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tinqinacademy.hotel.api.contracts.base.OperationOutput;
+import com.tinqinacademy.hotel.api.HotelRestApiPaths;
 import com.tinqinacademy.hotel.api.errors.ErrorOutput;
 import com.tinqinacademy.hotel.api.operations.bookroom.BookRoom;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomAvailability;
 import com.tinqinacademy.hotel.api.operations.getroombyid.GetRoomInfo;
 import com.tinqinacademy.hotel.api.operations.unbookroom.UnbookRoom;
-import com.tinqinacademy.hotel.persistence.enums.BathroomType;
-import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import com.tinqinacademy.hotel.api.operations.bookroom.BookRoomInput;
 import com.tinqinacademy.hotel.api.operations.bookroom.BookRoomOutput;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomsInput;
@@ -23,7 +21,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.vavr.control.Either;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +38,7 @@ public class HotelController extends BaseController {
     private final BookRoom bookRoomOperation;
     private final ObjectMapper objectMapper;
 
-    @GetMapping(RestApiPaths.CHECK_ROOM)
+    @GetMapping(HotelRestApiPaths.CHECK_ROOM)
     @Operation(
             summary = "Check room REST API",
             description = "Checks whether a room is available for a certain period."
@@ -67,7 +64,7 @@ public class HotelController extends BaseController {
         return getOutput(result, HttpStatus.OK);
     }
 
-    @GetMapping(RestApiPaths.GET_ROOM_INFO)
+    @GetMapping(HotelRestApiPaths.GET_ROOM_INFO)
     @Operation(
             summary = "Info room REST API",
             description = "Returns basic info for a room with a specified id."
@@ -85,7 +82,7 @@ public class HotelController extends BaseController {
         return getOutput(result, HttpStatus.OK);
     }
 
-    @PostMapping(RestApiPaths.BOOK_ROOM)
+    @PostMapping(HotelRestApiPaths.BOOK_ROOM)
     @Operation(
             summary = "Book room REST API",
             description = "Books the room specified."
@@ -103,7 +100,7 @@ public class HotelController extends BaseController {
         return getOutput(result, HttpStatus.OK);
     }
 
-    @DeleteMapping(RestApiPaths.UNBOOK_ROOM)
+    @DeleteMapping(HotelRestApiPaths.UNBOOK_ROOM)
     @Operation(
             summary = "Unbook room REST API",
             description = "Unbooks a room that the user has already been booked."

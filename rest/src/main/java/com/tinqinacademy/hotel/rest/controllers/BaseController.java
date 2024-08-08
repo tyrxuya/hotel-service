@@ -1,7 +1,6 @@
-package com.tinqinacademy.hotel.rest;
+package com.tinqinacademy.hotel.rest.controllers;
 
-import com.tinqinacademy.hotel.api.contracts.base.OperationInput;
-import com.tinqinacademy.hotel.api.contracts.base.OperationOutput;
+import com.tinqinacademy.hotel.api.base.OperationOutput;
 import com.tinqinacademy.hotel.api.errors.ErrorOutput;
 import io.vavr.control.Either;
 import org.springframework.http.HttpStatus;

@@ -1,10 +1,8 @@
 package com.tinqinacademy.hotel.api.operations.createroom;
 
-import com.tinqinacademy.hotel.api.contracts.base.OperationInput;
-import com.tinqinacademy.hotel.api.enums.BedSize;
+import com.tinqinacademy.hotel.api.base.OperationInput;
 import com.tinqinacademy.hotel.api.validators.bathroomtype.ValidBathroomType;
 import com.tinqinacademy.hotel.api.validators.bedsize.ValidBedSize;
-import com.tinqinacademy.hotel.persistence.enums.BathroomType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.*;

@@ -1,6 +1,7 @@
-package com.tinqinacademy.hotel.rest;
+package com.tinqinacademy.hotel.rest.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tinqinacademy.hotel.api.HotelRestApiPaths;
 import com.tinqinacademy.hotel.api.errors.ErrorOutput;
 import com.tinqinacademy.hotel.api.operations.createroom.CreateRoomInput;
 import com.tinqinacademy.hotel.api.operations.createroom.CreateRoom;
@@ -27,7 +28,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.vavr.control.Either;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +47,7 @@ public class SystemController extends BaseController {
     private final DeleteRoom deleteRoomOperation;
     private final ObjectMapper objectMapper;
 
-    @PostMapping(RestApiPaths.REGISTER_VISITOR)
+    @PostMapping(HotelRestApiPaths.REGISTER_VISITOR)
     @Operation(
             summary = "Register visitor REST API",
             description = "Registers a visitor as room renter."
@@ -65,7 +65,7 @@ public class SystemController extends BaseController {
         return getOutput(result, HttpStatus.CREATED);
     }
 
-    @GetMapping(RestApiPaths.GET_VISITORS_INFO)
+    @GetMapping(HotelRestApiPaths.GET_VISITORS_INFO)
     @Operation(
             summary = "Info visitor REST API",
             description = "Provides a report based on various criteria. Provides info when room was occupied and by whom. Can report when a user has occupied rooms."
@@ -102,7 +102,7 @@ public class SystemController extends BaseController {
         return getOutput(result, HttpStatus.OK);
     }
 
-    @PostMapping(RestApiPaths.CREATE_ROOM)
+    @PostMapping(HotelRestApiPaths.CREATE_ROOM)
     @Operation(
             summary = "Create room REST API",
             description = "Admin creates a new room with the specified parameters."
@@ -117,7 +117,7 @@ public class SystemController extends BaseController {
         return getOutput(result, HttpStatus.CREATED);
     }
 
-    @PutMapping(RestApiPaths.UPDATE_ROOM)
+    @PutMapping(HotelRestApiPaths.UPDATE_ROOM)
     @Operation(
             summary = "Update room REST API",
             description = "Admin updates the info regarding a certain room."
@@ -136,7 +136,7 @@ public class SystemController extends BaseController {
     }
 
     @PatchMapping(
-            path = RestApiPaths.PARTIAL_UPDATE_ROOM,
+            path = HotelRestApiPaths.PARTIAL_UPDATE_ROOM,
             consumes = "application/json-patch+json")
     @Operation(
             summary = "Partially update room REST API",
@@ -154,7 +154,7 @@ public class SystemController extends BaseController {
         return getOutput(result, HttpStatus.OK);
     }
 
-    @DeleteMapping(RestApiPaths.DELETE_ROOM)
+    @DeleteMapping(HotelRestApiPaths.DELETE_ROOM)
     @Operation(
             summary = "Delete room REST API",
             description = "Deletes a room."
