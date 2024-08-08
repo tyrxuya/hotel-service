@@ -1,14 +1,12 @@
-package com.tinqinacademy.hotel.rest;
+package com.tinqinacademy.hotel.rest.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tinqinacademy.hotel.api.contracts.base.OperationOutput;
+import com.tinqinacademy.hotel.api.RestApiPaths;
 import com.tinqinacademy.hotel.api.errors.ErrorOutput;
 import com.tinqinacademy.hotel.api.operations.bookroom.BookRoom;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomAvailability;
 import com.tinqinacademy.hotel.api.operations.getroombyid.GetRoomInfo;
 import com.tinqinacademy.hotel.api.operations.unbookroom.UnbookRoom;
-import com.tinqinacademy.hotel.persistence.enums.BathroomType;
-import com.tinqinacademy.hotel.persistence.enums.BedSize;
 import com.tinqinacademy.hotel.api.operations.bookroom.BookRoomInput;
 import com.tinqinacademy.hotel.api.operations.bookroom.BookRoomOutput;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomsInput;
@@ -23,7 +21,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.vavr.control.Either;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
