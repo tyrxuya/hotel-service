@@ -51,25 +51,30 @@ public class BookRoomOperation extends BaseOperation implements BookRoom {
     @Override
     public Either<ErrorOutput, BookRoomOutput> process(BookRoomInput input) {
         return Try.of(() -> {
-            log.info("start bookRoom input: {}", input);
+            log.info("Start process method in BookRoomOperation. Input: {}", input);
 
             validate(input);
 
             User user = getUserFromRepository(input);
+            log.info("User {} found.", user);
 
             Room room = getRoomFromRepository(input);
+            log.info("Room {} found.", room);
 
             checkIsRoomPresent(input);
+            log.info("Room {} is available for booking.", room);
 
             Booking booking = createBooking(input, room, user);
+            log.info("Booking {} created.", booking);
 
             bookingRepository.save(booking);
+            log.info("Booking {} saved in repository.", booking);
 
             BookRoomOutput result = BookRoomOutput.builder()
                     .bookingId(booking.getId().toString())
                     .build();
 
-            log.info("end bookRoom result: {}", result);
+            log.info("End process method in BookRoomOperation. Result: {}", result);
 
             return result;
         })
@@ -114,11 +119,17 @@ public class BookRoomOperation extends BaseOperation implements BookRoom {
 
     private Room getRoomFromRepository(BookRoomInput input) {
         return roomRepository.findById(UUID.fromString(input.getRoomId()))
-                .orElseThrow(RoomNotFoundException::new);
+                .orElseThrow(() -> {
+                    log.warn("Room with id {} not found", input.getRoomId());
+                    return new RoomNotFoundException();
+                });
     }
 
     private User getUserFromRepository(BookRoomInput input) {
         return userRepository.findByUsername(input.getUsername())
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> {
+                    log.warn("User with username {} not found.", input.getUsername());
+                    return new UserNotFoundException();
+                });
     }
 }

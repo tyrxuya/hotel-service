@@ -35,17 +35,18 @@ public class CheckRoomAvailabilityOperation extends BaseOperation implements Che
     @Override
     public Either<ErrorOutput, CheckRoomsOutput> process(CheckRoomsInput input) {
         return Try.of(() -> {
-            log.info("start checkRoomAvailability input: {}", input);
+            log.info("Start process method in CheckRoomAvailabilityOperation. Input: {}", input);
 
             validate(input);
 
             List<UUID> roomIds = getRoomIds(input);
+            log.info("Room ids that match the input: {}", roomIds);
 
             CheckRoomsOutput result = CheckRoomsOutput.builder()
                     .idList(roomIds)
                     .build();
 
-            log.info("end checkRoomAvailability result: {}", result);
+            log.info("End process method in BookRoomOperation. Result: {}", result);
 
             return result;
         })

@@ -44,23 +44,27 @@ public class RegisterVisitorOperation extends BaseOperation implements RegisterV
     @Override
     public Either<ErrorOutput, RegisterVisitorOutput> process(RegisterVisitorInput input) {
         return Try.of(() -> {
-            log.info("start registerVisitor input: {}", input);
+            log.info("Start process method in RegisterVisitorOperation. Input: {}", input);
 
             validate(input);
 
             Booking booking = getBookingFromRepository(input);
+            log.info("Booking {} found from repository.", booking);
 
             List<Guest> guests = initializeGuestList(input.getHotelVisitors());
+            log.info("Converted all hotel visitors to guests.");
 
             guestRepository.saveAll(guests);
+            log.info("Guests saved in repository.");
 
             guests.forEach(guest -> booking.getGuests().add(guest));
 
             bookingRepository.save(booking);
+            log.info("Booking {} saved in repository.", booking);
 
             RegisterVisitorOutput result = RegisterVisitorOutput.builder().build();
 
-            log.info("end registerVisitor result: {}", result);
+            log.info("End process method in BookRoomOperation. Result: {}", result);
 
             return result;
         })
@@ -74,7 +78,10 @@ public class RegisterVisitorOperation extends BaseOperation implements RegisterV
 
     private Booking getBookingFromRepository(RegisterVisitorInput input) {
         return bookingRepository.findById(UUID.fromString(input.getBookingId()))
-                .orElseThrow(BookingNotFoundException::new);
+                .orElseThrow(() -> {
+                    log.warn("Booking with id {} not found in repository.", input.getBookingId());
+                    return new BookingNotFoundException();
+                });
     }
 
     private List<Guest> initializeGuestList(List<HotelVisitorInput> hotelVisitors) {

@@ -45,21 +45,24 @@ public class GetRoomInfoOperation extends BaseOperation implements GetRoomInfo {
     @Override
     public Either<ErrorOutput, GetRoomByIdOutput> process(GetRoomByIdInput input) {
         return Try.of(() -> {
-            log.info("start getRoomInfo input: {}", input);
+            log.info("Start process method in GetRoomInfoOperation. Input: {}", input);
 
             validate(input);
 
             Room room = findRoomByInput(input);
+            log.info("Room with id {} found in repository.", input.getRoomId());
 
             List<Booking> bookings = findBookingsByRoom(room);
+            log.info("Bookings found for the room: {}", bookings);
 
             GetRoomByIdOutput result = conversionService.convert(room, GetRoomByIdOutput.class);
 
             List<LocalDate> datesOccupied = getDatesOccupiedFromBookings(bookings);
+            log.info("Room {} is occupied on: {}", room, datesOccupied);
 
             result.setDatesOccupied(datesOccupied);
 
-            log.info("end getRoomInfo result: {}", result);
+            log.info("End process method in GetRoomInfoOperation. Result: {}", result);
 
             return result;
         })
@@ -78,7 +81,10 @@ public class GetRoomInfoOperation extends BaseOperation implements GetRoomInfo {
 
     private Room findRoomByInput(GetRoomByIdInput input) {
         return roomRepository.findById(UUID.fromString(input.getRoomId()))
-                .orElseThrow(RoomNotFoundException::new);
+                .orElseThrow(() -> {
+                    log.warn("Room with id {} not found in repository.", input.getRoomId());
+                    return new RoomNotFoundException();
+                });
     }
 
     private List<LocalDate> getDatesOccupiedFromBookings(List<Booking> bookings) {

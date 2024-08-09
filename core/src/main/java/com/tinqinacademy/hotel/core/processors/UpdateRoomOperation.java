@@ -46,15 +46,19 @@ public class UpdateRoomOperation extends BaseOperation implements UpdateRoom {
     @Override
     public Either<ErrorOutput, UpdateRoomOutput> process(UpdateRoomInput input) {
         return Try.of(() -> {
-            log.info("start updateRoom input: {}", input);
+            log.info("Start process method in UpdateRoomOperation. Input: {}", input);
 
             validate(input);
 
             Room room = getRoomFromRepository(input);
+            log.info("Room {} found in repository.", room);
 
             updateRoom(input, room);
 
+            log.info("Input: {}", input);
+
             roomRepository.save(room);
+            log.info("Room {} updated in repository.", room);
 
             //roomRepository.update(room);
 
@@ -62,7 +66,7 @@ public class UpdateRoomOperation extends BaseOperation implements UpdateRoom {
                     .roomId(room.getId())
                     .build();
 
-            log.info("end updateRoom result: {}", result);
+            log.info("End process in UpdateRoomOperation. Result: {}", result);
 
             return result;
         })
@@ -92,11 +96,17 @@ public class UpdateRoomOperation extends BaseOperation implements UpdateRoom {
 
     private Room getRoomFromRepository(UpdateRoomInput input) {
         return roomRepository.findById(UUID.fromString(input.getRoomId()))
-                .orElseThrow(RoomNotFoundException::new);
+                .orElseThrow(() -> {
+                    log.warn("Room with id {} not found.", input.getRoomId());
+                    return new RoomNotFoundException();
+                });
     }
 
     private Bed getBedByBedSizeFromRepository(BedSize bedSize) {
         return bedRepository.findBedByBedSize(bedSize)
-                .orElseThrow(BedNotFoundException::new);
+                .orElseThrow(() -> {
+                    log.warn("Bed {} not found.", bedSize);
+                    return new BedNotFoundException();
+                });
     }
 }

@@ -43,23 +43,25 @@ public class CreateRoomOperation extends BaseOperation implements CreateRoom {
     @Override
     public Either<ErrorOutput, CreateRoomOutput> process(CreateRoomInput input) {
         return Try.of(() -> {
-            log.info("start createRoom input: {}", input);
+            log.info("Start process method in CreateRoomOperation. Input: {}", input);
 
             validate(input);
 
             List<Bed> beds = createBeds(input);
+            log.info("Created Bed entities {} based on input: {}", beds, input.getBedSizes());
 
             Room room = conversionService.convert(input, Room.class);
 
             room.setBeds(beds);
 
             roomRepository.save(room);
+            log.info("Saved room {} in repository.", room);
 
             CreateRoomOutput result = CreateRoomOutput.builder()
                     .roomId(room.getId())
                     .build();
 
-            log.info("end createRoom result: {}", result);
+            log.info("End process method in CreateRoomOperation. Result: {}", result);
 
             return result;
         })
@@ -75,12 +77,18 @@ public class CreateRoomOperation extends BaseOperation implements CreateRoom {
         List<BedSize> bedSizes = new ArrayList<>();
 
         input.getBedSizes()
-                .forEach(bedSize -> bedSizes.add(BedSize.getBedSize(bedSize)));
+                .forEach(bedSize -> bedSizes.add(
+                        BedSize.getBedSize(bedSize)
+                        )
+                );
 
         List<Bed> beds = new ArrayList<>();
         bedSizes.forEach(bedSize -> {
             Bed bed = bedRepository.findBedByBedSize(bedSize)
-                    .orElseThrow(BedNotFoundException::new);
+                    .orElseThrow(() -> {
+                        log.warn("Bed with bed size {} not found.", bedSize);
+                        return new BedNotFoundException();
+                    });
             beds.add(bed);
         });
 

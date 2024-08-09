@@ -38,16 +38,16 @@ public class GetUserOperation extends BaseOperation implements GetUser {
     @Override
     public Either<ErrorOutput, GetUserOutput> process(GetUserInput input) {
         return Try.of(() -> {
-            log.info("start getUser input: {}", input);
+            log.info("Start process method in GetUserOperation. Input: {}", input);
 
             validate(input);
 
             User user = getUserFromRepository(input);
+            log.info("User {} found in repository.", user);
 
             GetUserOutput result = conversionService.convert(user, GetUserOutput.class);
 
-            log.info("end getUser result: {}", result);
-
+            log.info("End process method in GetUserOperation. Result: {}", result);
             return result;
         })
                 .toEither()
@@ -60,6 +60,9 @@ public class GetUserOperation extends BaseOperation implements GetUser {
 
     private User getUserFromRepository(GetUserInput input) {
         return userRepository.findById(UUID.fromString(input.getUserId()))
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> {
+                    log.warn("User {} not found in repository.", input.getUserId());
+                    return new UserNotFoundException();
+                });
     }
 }
