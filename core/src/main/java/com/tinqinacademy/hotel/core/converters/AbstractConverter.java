@@ -12,9 +12,11 @@ public abstract class AbstractConverter<S, T> implements Converter<S, T> {
                 source.getClass().getSimpleName(),
                 getTargetClass().getSimpleName());
 
+        log.info("Source value: {}", source);
+
         T result = doConvert(source);
 
-        log.info("End convert result: {}", result);
+        log.info("End convert target value: {}", result);
 
         return result;
     }

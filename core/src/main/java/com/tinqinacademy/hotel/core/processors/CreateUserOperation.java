@@ -35,19 +35,20 @@ public class CreateUserOperation extends BaseOperation implements CreateUser {
     @Override
     public Either<ErrorOutput, CreateUserOutput> process(CreateUserInput input) {
         return Try.of(() -> {
-            log.info("start createUser input: {}", input);
+            log.info("Start process method in CreateUserOperation. Input: {}", input);
 
             validate(input);
 
             User user = conversionService.convert(input, User.class);
 
             userRepository.save(user);
+            log.info("User {} saved in repository", user);
 
             CreateUserOutput result = CreateUserOutput.builder()
                     .userId(user.getId())
                     .build();
 
-            log.info("end createUser result: {}", result);
+            log.info("End process method in CreateUserOperation. Result: {}", result);
 
             return result;
         })

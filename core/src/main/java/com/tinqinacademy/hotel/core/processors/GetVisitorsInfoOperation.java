@@ -37,18 +37,21 @@ public class GetVisitorsInfoOperation extends BaseOperation implements GetVisito
     @Override
     public Either<ErrorOutput, GetRegisteredVisitorsOutput> process(GetRegisteredVisitorsInput input) {
         return Try.of(() -> {
-            log.info("start getVisitorsInfo input: {}", input);
+            log.info("Start process method in GetVisitorsInfoOperation. Input: {}", input);
 
             validate(input);
 
             List<Guest> guests = searchGuestsFromRepository(input);
+            log.info("Guests {} found from repository.", guests);
+
             List<HotelVisitorOutput> hotelVisitors = getHotelVisitorsFromGuests(guests);
+            log.info("Hotel visitors {}", hotelVisitors);
 
             GetRegisteredVisitorsOutput result = GetRegisteredVisitorsOutput.builder()
                     .hotelVisitors(hotelVisitors)
                     .build();
 
-            log.info("end getVisitorsInfo result: {}", result);
+            log.info("End process method in GetVisitorsInfoOperation. Result: {}", result);
 
             return result;
         })
@@ -62,7 +65,10 @@ public class GetVisitorsInfoOperation extends BaseOperation implements GetVisito
     private List<HotelVisitorOutput> getHotelVisitorsFromGuests(List<Guest> guests) {
         List<HotelVisitorOutput> hotelVisitors = new ArrayList<>();
 
-        guests.forEach(guest -> hotelVisitors.add(conversionService.convert(guest, HotelVisitorOutput.class)));
+        guests.forEach(guest -> hotelVisitors.add(
+                conversionService.convert(guest, HotelVisitorOutput.class)
+                )
+        );
 
         return hotelVisitors;
     }
