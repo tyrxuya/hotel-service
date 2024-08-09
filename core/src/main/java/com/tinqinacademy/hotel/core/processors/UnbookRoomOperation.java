@@ -34,15 +34,16 @@ public class UnbookRoomOperation extends BaseOperation implements UnbookRoom {
     @Override
     public Either<ErrorOutput, UnbookRoomOutput> process(UnbookRoomInput input) {
         return Try.of(() -> {
-            log.info("start unbookRoom input: {}", input);
+            log.info("Start process method in UnbookRoomOperation. Input: {}", input);
 
             validate(input);
 
             bookingRepository.deleteById(UUID.fromString(input.getBookingId()));
+            log.info("Booking with id {} deleted from repository", input.getBookingId());
 
             UnbookRoomOutput result = UnbookRoomOutput.builder().build();
 
-            log.info("end unbookRoom result: {}", result);
+            log.info("End process method in UnbookRoomOperation. Result: {}", result);
 
             return result;
         })

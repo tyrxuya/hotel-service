@@ -36,15 +36,16 @@ public class DeleteRoomOperation extends BaseOperation implements DeleteRoom {
     @Override
     public Either<ErrorOutput, DeleteRoomOutput> process(DeleteRoomInput input) {
         return Try.of(() -> {
-            log.info("start deleteRoom input: {}", input);
+            log.info("Start process method in DeleteRoomOperation. Input: {}", input);
 
             validate(input);
 
             roomRepository.deleteById(UUID.fromString(input.getRoomId()));
+            log.info("Room with id {} deleted from repository.", input.getRoomId());
 
             DeleteRoomOutput result = DeleteRoomOutput.builder().build();
 
-            log.info("end deleteRoom result: {}", result);
+            log.info("End process method in DeleteRoomOperation. Result: {}", result);
 
             return result;
         })

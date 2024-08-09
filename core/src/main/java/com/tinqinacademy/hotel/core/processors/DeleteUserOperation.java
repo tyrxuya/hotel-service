@@ -34,15 +34,16 @@ public class DeleteUserOperation extends BaseOperation implements DeleteUser {
     @Override
     public Either<ErrorOutput, DeleteUserOutput> process(DeleteUserInput input) {
         return Try.of(() -> {
-            log.info("start deleteUser input: {}", input);
+            log.info("Start process method in DeleteUserOperation. Input: {}", input);
 
             validate(input);
 
             userRepository.deleteById(UUID.fromString(input.getUserId()));
+            log.info("User with id {} deleted from repository.", input.getUserId());
 
             DeleteUserOutput result = DeleteUserOutput.builder().build();
 
-            log.info("end deleteUser result: {}", result);
+            log.info("End process method in DeleteUserOperation. Result: {}", result);
 
             return result;
         })

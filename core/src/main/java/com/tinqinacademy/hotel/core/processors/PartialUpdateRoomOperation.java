@@ -45,21 +45,24 @@ public class PartialUpdateRoomOperation extends BaseOperation implements Partial
     @Override
     public Either<ErrorOutput, PartialUpdateRoomOutput> process(PartialUpdateRoomInput input) {
         return Try.of(() -> {
-            log.info("start partialUpdateRoom input: {}", input);
+            log.info("Start process method in PartialUpdateRoomOperation. Input: {}", input);
 
             validate(input);
 
             Room room = getRoomFromRepository(input);
+            log.info("Room {} found in repository.", room);
 
             setNonNullAttributes(input, room);
+            log.info("Updated all non-null values.");
 
             roomRepository.save(room);
+            log.info("Room {} saved in repository.", room);
 
             PartialUpdateRoomOutput result = PartialUpdateRoomOutput.builder()
                     .roomId(room.getId().toString())
                     .build();
 
-            log.info("end partialUpdateRoom result: {}", result);
+            log.info("End process method in PartialUpdateRoomOperation. Result: {}", result);
 
             return result;
         })
@@ -98,7 +101,10 @@ public class PartialUpdateRoomOperation extends BaseOperation implements Partial
         List<Bed> beds = new ArrayList<>();
         bedSizes.forEach(bedSize -> beds.add(
                         bedRepository.findBedByBedSize(bedSize)
-                                .orElseThrow(BedNotFoundException::new)
+                                .orElseThrow(() -> {
+                                    log.warn("Bed with bed size {} not found.", bedSize);
+                                    return new BedNotFoundException();
+                                })
                 )
         );
 
@@ -107,6 +113,9 @@ public class PartialUpdateRoomOperation extends BaseOperation implements Partial
 
     private Room getRoomFromRepository(PartialUpdateRoomInput input) {
         return roomRepository.findById(UUID.fromString(input.getRoomId()))
-                .orElseThrow(RoomNotFoundException::new);
+                .orElseThrow(() -> {
+                    log.warn("Room with id {} not found.", input.getRoomId());
+                    return new RoomNotFoundException();
+                });
     }
 }
