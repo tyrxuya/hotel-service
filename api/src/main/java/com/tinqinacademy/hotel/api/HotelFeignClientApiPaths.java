@@ -1,6 +1,6 @@
 package com.tinqinacademy.hotel.api;
 
-public class HotelFeignClientApiPaths {
+public final class HotelFeignClientApiPaths {
     private static final String GET = "GET";
     private static final String POST = "POST";
     private static final String PUT = "PUT";
