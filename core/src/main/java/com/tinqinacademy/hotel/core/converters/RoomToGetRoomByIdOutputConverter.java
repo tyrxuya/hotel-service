@@ -1,8 +1,9 @@
 package com.tinqinacademy.hotel.core.converters;
 
+import com.tinqinacademy.hotel.api.enums.BathroomType;
 import com.tinqinacademy.hotel.api.operations.getroombyid.GetRoomByIdOutput;
 import com.tinqinacademy.hotel.persistence.entities.Room;
-import com.tinqinacademy.hotel.persistence.enums.BedSize;
+import com.tinqinacademy.hotel.api.enums.BedSize;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,13 +20,13 @@ public class RoomToGetRoomByIdOutputConverter extends AbstractConverter<Room, Ge
     protected GetRoomByIdOutput doConvert(Room source) {
         List<BedSize> bedSizes = new ArrayList<>();
 
-        source.getBeds().forEach(bed -> bedSizes.add(bed.getBedSize()));
+        source.getBeds().forEach(bed -> bedSizes.add(BedSize.getBedSize(bed.getBedSize().getCode())));
 
         GetRoomByIdOutput result = GetRoomByIdOutput.builder()
                 .roomId(source.getId())
                 .price(source.getPrice())
                 .floor(source.getFloor())
-                .bathroomType(source.getBathroomType())
+                .bathroomType(BathroomType.getBathroomType(source.getBathroomType().getCode()))
                 .bedSizes(bedSizes)
                 .bedCount(bedSizes.size())
                 .build();
