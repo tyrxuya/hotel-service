@@ -4,10 +4,11 @@ import com.tinqinacademy.hotel.api.base.OperationOutput;
 import lombok.*;
 
 @NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 @Builder
 @ToString
 @Getter
 @Setter
 public class UnbookRoomOutput implements OperationOutput {
+    private String bookingId;
 }
