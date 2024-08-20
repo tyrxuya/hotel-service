@@ -7,6 +7,7 @@ import com.tinqinacademy.hotel.api.validators.bedsize.ValidBedSize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.validator.constraints.UUID;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
 @Setter
 public class UpdateRoomInput implements OperationInput {
     @JsonIgnore
+    @UUID(message = "roomId must be a valid UUID")
     private String roomId;
 
     private List<@ValidBedSize(optional = true) String> bedSizes;
