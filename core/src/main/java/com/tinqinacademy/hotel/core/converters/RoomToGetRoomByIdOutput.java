@@ -1,9 +1,7 @@
 package com.tinqinacademy.hotel.core.converters;
 
-import com.tinqinacademy.hotel.api.enums.BathroomType;
 import com.tinqinacademy.hotel.api.operations.getroombyid.GetRoomByIdOutput;
 import com.tinqinacademy.hotel.persistence.entities.Room;
-import com.tinqinacademy.hotel.api.enums.BedSize;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
