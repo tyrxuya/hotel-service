@@ -19,7 +19,7 @@ import java.util.UUID;
 @Setter
 public class GetRoomByIdOutput implements OperationOutput {
     @Schema(example = "15")
-    private UUID roomId;
+    private String roomId;
 
     @Schema(example = "15124.15")
     private BigDecimal price;
@@ -28,10 +28,10 @@ public class GetRoomByIdOutput implements OperationOutput {
     private Integer floor;
 
     @Schema(example = "kingSize")
-    private List<BedSize> bedSizes;
+    private List<String> bedSizes;
 
     @Schema(example = "private")
-    private BathroomType bathroomType;
+    private String bathroomType;
 
     @Schema(example = "2")
     private Integer bedCount;

@@ -2,6 +2,7 @@ package com.tinqinacademy.hotel.core.processors;
 
 import com.tinqinacademy.hotel.api.errors.ErrorMapper;
 import com.tinqinacademy.hotel.api.errors.ErrorOutput;
+import com.tinqinacademy.hotel.api.exceptions.RoomNotFoundException;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomAvailability;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomsInput;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomsOutput;
@@ -27,7 +28,10 @@ import java.util.UUID;
 public class CheckRoomAvailabilityOperation extends BaseOperation implements CheckRoomAvailability {
     private final BookingRepository bookingRepository;
 
-    public CheckRoomAvailabilityOperation(Validator validator, ConversionService conversionService, ErrorMapper errorMapper, BookingRepository bookingRepository) {
+    public CheckRoomAvailabilityOperation(Validator validator,
+                                          ConversionService conversionService,
+                                          ErrorMapper errorMapper,
+                                          BookingRepository bookingRepository) {
         super(validator, conversionService, errorMapper);
         this.bookingRepository = bookingRepository;
     }
@@ -39,7 +43,7 @@ public class CheckRoomAvailabilityOperation extends BaseOperation implements Che
 
             validate(input);
 
-            List<UUID> roomIds = getRoomIds(input);
+            List<String> roomIds = getRoomIds(input);
             log.info("Room ids that match the input: {}", roomIds);
 
             CheckRoomsOutput result = CheckRoomsOutput.builder()
@@ -53,18 +57,26 @@ public class CheckRoomAvailabilityOperation extends BaseOperation implements Che
                 .toEither()
                 .mapLeft(throwable -> Match(throwable).of(
                         validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        defaultCase(throwable, HttpStatus.I_AM_A_TEAPOT)
+                        customCase(throwable, HttpStatus.NOT_FOUND, RoomNotFoundException.class),
+                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
                 ));
     }
 
-    private List<UUID> getRoomIds(CheckRoomsInput input) {
-        List<UUID> roomIds = new ArrayList<>();
+    private List<String> getRoomIds(CheckRoomsInput input) {
+        List<String> roomIds = new ArrayList<>();
         bookingRepository.findBookingsByStartDateAndEndDateAndBedSizeAndBathroomTypeAndBedCount(input.getStartDate(),
                         input.getEndDate(),
                         BedSize.getBedSize(input.getBedSize()),
                         BathroomType.getBathroomType(input.getBathroomType()),
                         input.getBedCount())
-                .forEach(booking -> roomIds.add(booking.getRoom().getId()));
+                .forEach(booking -> roomIds.add(booking.getRoom()
+                        .getId()
+                        .toString())
+                );
+
+        if (roomIds.isEmpty()) {
+            throw new RoomNotFoundException();
+        }
         return roomIds;
     }
 }

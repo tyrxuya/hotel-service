@@ -30,6 +30,8 @@ public class HotelVisitorInput implements OperationInput {
     @Size(min = 10, max = 13, message = "phone number must be between 10 and 13 characters")
     private String phoneNo;
 
+    @Schema(example = "2003-09-22")
+    @Past(message = "invalid birthday")
     private LocalDate birthday;
 
     @Schema(example = "0349228888")

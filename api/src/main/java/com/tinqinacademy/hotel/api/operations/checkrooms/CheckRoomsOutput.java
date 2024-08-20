@@ -13,5 +13,5 @@ import java.util.UUID;
 @Getter
 @Setter
 public class CheckRoomsOutput implements OperationOutput {
-    private List<UUID> idList;
+    private List<String> idList;
 }

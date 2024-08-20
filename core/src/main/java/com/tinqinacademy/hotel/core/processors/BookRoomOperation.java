@@ -41,7 +41,12 @@ public class BookRoomOperation extends BaseOperation implements BookRoom {
     private final RoomRepository roomRepository;
     private final BookingRepository bookingRepository;
 
-    public BookRoomOperation(Validator validator, ConversionService conversionService, ErrorMapper errorMapper, UserRepository userRepository, RoomRepository roomRepository, BookingRepository bookingRepository) {
+    public BookRoomOperation(Validator validator,
+                             ConversionService conversionService,
+                             ErrorMapper errorMapper,
+                             UserRepository userRepository,
+                             RoomRepository roomRepository,
+                             BookingRepository bookingRepository) {
         super(validator, conversionService, errorMapper);
         this.userRepository = userRepository;
         this.roomRepository = roomRepository;
@@ -83,7 +88,7 @@ public class BookRoomOperation extends BaseOperation implements BookRoom {
                         customCase(throwable, HttpStatus.NOT_FOUND, RoomNotFoundException.class),
                         customCase(throwable, HttpStatus.NOT_FOUND, UserNotFoundException.class),
                         validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        defaultCase(throwable, HttpStatus.I_AM_A_TEAPOT)
+                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
                 ));
     }
 

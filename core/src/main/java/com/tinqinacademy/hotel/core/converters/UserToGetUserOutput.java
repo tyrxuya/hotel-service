@@ -2,7 +2,9 @@ package com.tinqinacademy.hotel.core.converters;
 
 import com.tinqinacademy.hotel.api.operations.getuser.GetUserOutput;
 import com.tinqinacademy.hotel.persistence.entities.User;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserToGetUserOutput extends AbstractConverter<User, GetUserOutput> {
     @Override
     protected Class<GetUserOutput> getTargetClass() {

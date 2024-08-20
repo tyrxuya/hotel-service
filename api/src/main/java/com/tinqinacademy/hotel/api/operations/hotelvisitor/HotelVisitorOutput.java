@@ -13,12 +13,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class HotelVisitorOutput implements OperationOutput {
-    @Schema(example = "2022-05-22")
-    private LocalDate startDate;
-
-    @Schema(example = "2022-05-25")
-    private LocalDate endDate;
-
     @Schema(example = "vanio")
     private String firstName;
 

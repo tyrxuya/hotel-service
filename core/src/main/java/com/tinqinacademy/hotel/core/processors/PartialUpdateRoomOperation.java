@@ -36,7 +36,11 @@ public class PartialUpdateRoomOperation extends BaseOperation implements Partial
     private final RoomRepository roomRepository;
     private final BedRepository bedRepository;
 
-    public PartialUpdateRoomOperation(Validator validator, ConversionService conversionService, ErrorMapper errorMapper, RoomRepository roomRepository, BedRepository bedRepository) {
+    public PartialUpdateRoomOperation(Validator validator,
+                                      ConversionService conversionService,
+                                      ErrorMapper errorMapper,
+                                      RoomRepository roomRepository,
+                                      BedRepository bedRepository) {
         super(validator, conversionService, errorMapper);
         this.roomRepository = roomRepository;
         this.bedRepository = bedRepository;
@@ -71,7 +75,7 @@ public class PartialUpdateRoomOperation extends BaseOperation implements Partial
                         customCase(throwable, HttpStatus.NOT_FOUND, BedNotFoundException.class),
                         customCase(throwable, HttpStatus.NOT_FOUND, RoomNotFoundException.class),
                         validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        defaultCase(throwable, HttpStatus.I_AM_A_TEAPOT)
+                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
                 ));
     }
 

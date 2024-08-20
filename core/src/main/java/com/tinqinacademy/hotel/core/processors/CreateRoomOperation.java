@@ -34,7 +34,11 @@ public class CreateRoomOperation extends BaseOperation implements CreateRoom {
     private final BedRepository bedRepository;
     private final RoomRepository roomRepository;
 
-    public CreateRoomOperation(Validator validator, ConversionService conversionService, ErrorMapper errorMapper, BedRepository bedRepository, RoomRepository roomRepository) {
+    public CreateRoomOperation(Validator validator,
+                               ConversionService conversionService,
+                               ErrorMapper errorMapper,
+                               BedRepository bedRepository,
+                               RoomRepository roomRepository) {
         super(validator, conversionService, errorMapper);
         this.bedRepository = bedRepository;
         this.roomRepository = roomRepository;
@@ -58,7 +62,7 @@ public class CreateRoomOperation extends BaseOperation implements CreateRoom {
             log.info("Saved room {} in repository.", room);
 
             CreateRoomOutput result = CreateRoomOutput.builder()
-                    .roomId(room.getId())
+                    .roomId(room.getId().toString())
                     .build();
 
             log.info("End process method in CreateRoomOperation. Result: {}", result);
@@ -69,7 +73,7 @@ public class CreateRoomOperation extends BaseOperation implements CreateRoom {
                 .mapLeft(throwable -> Match(throwable).of(
                         customCase(throwable, HttpStatus.NOT_FOUND, BedNotFoundException.class),
                         validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        defaultCase(throwable, HttpStatus.I_AM_A_TEAPOT)
+                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
                 ));
     }
 

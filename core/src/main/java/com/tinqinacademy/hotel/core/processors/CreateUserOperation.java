@@ -2,19 +2,14 @@ package com.tinqinacademy.hotel.core.processors;
 
 import com.tinqinacademy.hotel.api.errors.ErrorMapper;
 import com.tinqinacademy.hotel.api.errors.ErrorOutput;
-import com.tinqinacademy.hotel.api.exceptions.InvalidInputException;
-import com.tinqinacademy.hotel.api.exceptions.RoomNotFoundException;
-import com.tinqinacademy.hotel.api.exceptions.UserNotFoundException;
 import com.tinqinacademy.hotel.api.operations.createuser.CreateUserInput;
 import com.tinqinacademy.hotel.api.operations.createuser.CreateUser;
 import com.tinqinacademy.hotel.api.operations.createuser.CreateUserOutput;
 import com.tinqinacademy.hotel.persistence.entities.User;
 import com.tinqinacademy.hotel.persistence.repositories.UserRepository;
-import io.vavr.API;
 import io.vavr.control.Either;
 import io.vavr.control.Try;
 import jakarta.validation.Validator;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
@@ -27,7 +22,10 @@ import static io.vavr.API.*;
 public class CreateUserOperation extends BaseOperation implements CreateUser {
     private final UserRepository userRepository;
 
-    public CreateUserOperation(Validator validator, ConversionService conversionService, ErrorMapper errorMapper, UserRepository userRepository) {
+    public CreateUserOperation(Validator validator,
+                               ConversionService conversionService,
+                               ErrorMapper errorMapper,
+                               UserRepository userRepository) {
         super(validator, conversionService, errorMapper);
         this.userRepository = userRepository;
     }
@@ -45,7 +43,7 @@ public class CreateUserOperation extends BaseOperation implements CreateUser {
             log.info("User {} saved in repository", user);
 
             CreateUserOutput result = CreateUserOutput.builder()
-                    .userId(user.getId())
+                    .userId(user.getId().toString())
                     .build();
 
             log.info("End process method in CreateUserOperation. Result: {}", result);

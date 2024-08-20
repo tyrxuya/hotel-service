@@ -1,14 +1,16 @@
 version: '3.9'
 
 services:
-  hoteldb:
+  hotel_db:
+    container_name: hotel_db
     image: postgres
+    restart: unless-stopped
     networks:
       - hotel
     ports:
       - "5432:5432"
     volumes:
-      - hoteldb:/var/lib/postgresql/data
+      - hotel_db:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       - POSTGRES_PASSWORD=1234
@@ -31,9 +33,131 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
+  mail-dev:
+    container_name: mail_dev
+    image: maildev/maildev
+    environment:
+      - MAILDEV_WEB_PORT=1080
+      - MAILDEV_SMTP_PORT=1025
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    networks:
+      - hotel
+
+  admin-service:
+    container_name: admin_service
+    platform: linux/x86_64
+    build: ../admin
+    restart: on-failure
+    ports:
+      - "1234:8085"
+    stdin_open: true
+    tty: true
+    networks:
+      - hotel
+    volumes:
+      - .m2:/root/.m2
+
+  hotel-service:
+    container_name: hotel_service
+    depends_on:
+      - hotel_db
+      - admin-service
+    platform: linux/x86_64
+    build: ../hotel
+    restart: on-failure
+    ports:
+      - "1235:8081"
+    stdin_open: true
+    tty: true
+    networks:
+      - hotel
+    volumes:
+      - .m2:/root/.m2
+
+  comments-service:
+    container_name: comments_service
+    depends_on:
+      - hotel_db
+      - admin-service
+      - hotel-service
+    platform: linux/x86_64
+    build: ../comments
+    restart: on-failure
+    ports:
+      - "1236:8082"
+    stdin_open: true
+    tty: true
+    networks:
+      - hotel
+    volumes:
+      - .m2:/root/.m2
+
+  email-service:
+    container_name: email_service
+    depends_on:
+      - hotel_db
+      - admin-service
+      - hotel-service
+      - comments-service
+    platform: linux/x86_64
+    build: ../email
+    restart: on-failure
+    ports:
+      - "1237:8086"
+    stdin_open: true
+    tty: true
+    networks:
+      - hotel
+    volumes:
+      - .m2:/root/.m2
+
+  auth-service:
+    container_name: auth_service
+    depends_on:
+      - hotel_db
+      - admin-service
+      - hotel-service
+      - comments-service
+      - email-service
+    platform: linux/x86_64
+    build: ../authentication
+    restart: on-failure
+    ports:
+      - "1238:8083"
+    stdin_open: true
+    tty: true
+    networks:
+      - hotel
+    volumes:
+      - .m2:/root/.m2
+
+  bff-service:
+    container_name: bff_service
+    depends_on:
+      - hotel_db
+      - admin-service
+      - hotel-service
+      - comments-service
+      - email-service
+      - auth-service
+    platform: linux/x86_64
+    build: ../bff
+    restart: on-failure
+    ports:
+      - "1239:8084"
+    stdin_open: true
+    tty: true
+    networks:
+      - hotel
+    volumes:
+      - .m2:/root/.m2
+
 networks:
   hotel:
+    driver: bridge
 
 volumes:
-  hoteldb:
+  hotel_db:
   pgadmin_data:

@@ -2,10 +2,13 @@ package com.tinqinacademy.hotel.core.processors;
 
 import com.tinqinacademy.hotel.api.errors.ErrorMapper;
 import com.tinqinacademy.hotel.api.errors.ErrorOutput;
+import com.tinqinacademy.hotel.api.exceptions.BookingNotFoundException;
 import com.tinqinacademy.hotel.api.exceptions.InvalidInputException;
 import com.tinqinacademy.hotel.api.operations.unbookroom.UnbookRoomInput;
 import com.tinqinacademy.hotel.api.operations.unbookroom.UnbookRoom;
 import com.tinqinacademy.hotel.api.operations.unbookroom.UnbookRoomOutput;
+import com.tinqinacademy.hotel.persistence.entities.Booking;
+import com.tinqinacademy.hotel.persistence.entities.Room;
 import com.tinqinacademy.hotel.persistence.repositories.BookingRepository;
 import io.vavr.API;
 import io.vavr.control.Either;
@@ -26,7 +29,10 @@ import static io.vavr.API.*;
 public class UnbookRoomOperation extends BaseOperation implements UnbookRoom {
     private final BookingRepository bookingRepository;
 
-    public UnbookRoomOperation(Validator validator, ConversionService conversionService, ErrorMapper errorMapper, BookingRepository bookingRepository) {
+    public UnbookRoomOperation(Validator validator,
+                               ConversionService conversionService,
+                               ErrorMapper errorMapper,
+                               BookingRepository bookingRepository) {
         super(validator, conversionService, errorMapper);
         this.bookingRepository = bookingRepository;
     }
@@ -38,10 +44,14 @@ public class UnbookRoomOperation extends BaseOperation implements UnbookRoom {
 
             validate(input);
 
-            bookingRepository.deleteById(UUID.fromString(input.getBookingId()));
+            Booking booking = getBookingByInput(input);
+
+            bookingRepository.delete(booking);
             log.info("Booking with id {} deleted from repository", input.getBookingId());
 
-            UnbookRoomOutput result = UnbookRoomOutput.builder().build();
+            UnbookRoomOutput result = UnbookRoomOutput.builder()
+                    .bookingId(booking.getId().toString())
+                    .build();
 
             log.info("End process method in UnbookRoomOperation. Result: {}", result);
 
@@ -50,7 +60,13 @@ public class UnbookRoomOperation extends BaseOperation implements UnbookRoom {
                 .toEither()
                 .mapLeft(throwable -> Match(throwable).of(
                         validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        defaultCase(throwable, HttpStatus.I_AM_A_TEAPOT)
+                        customCase(throwable, HttpStatus.NOT_FOUND, BookingNotFoundException.class),
+                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
                 ));
+    }
+
+    private Booking getBookingByInput(UnbookRoomInput input) {
+        return bookingRepository.findById(UUID.fromString(input.getBookingId()))
+                .orElseThrow(BookingNotFoundException::new);
     }
 }
