@@ -2,7 +2,9 @@ package com.tinqinacademy.hotel.core.converters;
 
 import com.tinqinacademy.hotel.api.operations.hotelvisitor.HotelVisitorInput;
 import com.tinqinacademy.hotel.persistence.entities.Guest;
+import org.springframework.stereotype.Component;
 
+@Component
 public class HotelVisitorInputToGuest extends AbstractConverter<HotelVisitorInput, Guest> {
     @Override
     protected Class<Guest> getTargetClass() {
