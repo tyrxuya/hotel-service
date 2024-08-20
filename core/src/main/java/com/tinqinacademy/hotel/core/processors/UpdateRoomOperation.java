@@ -37,7 +37,11 @@ public class UpdateRoomOperation extends BaseOperation implements UpdateRoom {
     private final RoomRepository roomRepository;
     private final BedRepository bedRepository;
 
-    public UpdateRoomOperation(Validator validator, ConversionService conversionService, ErrorMapper errorMapper, RoomRepository roomRepository, BedRepository bedRepository) {
+    public UpdateRoomOperation(Validator validator,
+                               ConversionService conversionService,
+                               ErrorMapper errorMapper,
+                               RoomRepository roomRepository,
+                               BedRepository bedRepository) {
         super(validator, conversionService, errorMapper);
         this.roomRepository = roomRepository;
         this.bedRepository = bedRepository;
@@ -63,7 +67,7 @@ public class UpdateRoomOperation extends BaseOperation implements UpdateRoom {
             //roomRepository.update(room);
 
             UpdateRoomOutput result = UpdateRoomOutput.builder()
-                    .roomId(room.getId())
+                    .roomId(room.getId().toString())
                     .build();
 
             log.info("End process in UpdateRoomOperation. Result: {}", result);
@@ -75,7 +79,7 @@ public class UpdateRoomOperation extends BaseOperation implements UpdateRoom {
                         customCase(throwable, HttpStatus.NOT_FOUND, BedNotFoundException.class),
                         customCase(throwable, HttpStatus.NOT_FOUND, RoomNotFoundException.class),
                         validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        defaultCase(throwable, HttpStatus.I_AM_A_TEAPOT)
+                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
                 ));
     }
 
