@@ -12,5 +12,5 @@ import java.util.UUID;
 @Getter
 @Setter
 public class CreateUserOutput implements OperationOutput {
-    private UUID userId;
+    private String userId;
 }

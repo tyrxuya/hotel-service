@@ -3,7 +3,6 @@ package com.tinqinacademy.hotel.core.processors;
 import com.tinqinacademy.hotel.api.errors.ErrorMapper;
 import com.tinqinacademy.hotel.api.errors.ErrorOutput;
 import com.tinqinacademy.hotel.api.exceptions.BookingNotFoundException;
-import com.tinqinacademy.hotel.api.exceptions.InvalidInputException;
 import com.tinqinacademy.hotel.api.exceptions.RoomNotFoundException;
 import com.tinqinacademy.hotel.api.operations.getroombyid.GetRoomByIdInput;
 import com.tinqinacademy.hotel.api.operations.getroombyid.GetRoomByIdOutput;
@@ -28,7 +27,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static io.vavr.API.*;
-import static io.vavr.Predicates.instanceOf;
 
 @Service
 @Slf4j
@@ -36,7 +34,11 @@ public class GetRoomInfoOperation extends BaseOperation implements GetRoomInfo {
     private final RoomRepository roomRepository;
     private final BookingRepository bookingRepository;
 
-    public GetRoomInfoOperation(Validator validator, ConversionService conversionService, ErrorMapper errorMapper, RoomRepository roomRepository, BookingRepository bookingRepository) {
+    public GetRoomInfoOperation(Validator validator,
+                                ConversionService conversionService,
+                                ErrorMapper errorMapper,
+                                RoomRepository roomRepository,
+                                BookingRepository bookingRepository) {
         super(validator, conversionService, errorMapper);
         this.roomRepository = roomRepository;
         this.bookingRepository = bookingRepository;
@@ -71,7 +73,7 @@ public class GetRoomInfoOperation extends BaseOperation implements GetRoomInfo {
                         customCase(throwable, HttpStatus.NOT_FOUND, BookingNotFoundException.class),
                         customCase(throwable, HttpStatus.NOT_FOUND, RoomNotFoundException.class),
                         validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        defaultCase(throwable, HttpStatus.I_AM_A_TEAPOT)
+                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
                 ));
     }
 
@@ -91,8 +93,13 @@ public class GetRoomInfoOperation extends BaseOperation implements GetRoomInfo {
         List<LocalDate> datesOccupied = new ArrayList<>();
 
         bookings.forEach(booking -> {
-            datesOccupied.add(booking.getStartDate());
-            datesOccupied.add(booking.getEndDate());
+//            datesOccupied.add(booking.getStartDate());
+//            datesOccupied.add(booking.getEndDate());
+            LocalDate startDate = booking.getStartDate();
+            while (!startDate.isAfter(booking.getEndDate())) {
+                datesOccupied.add(startDate);
+                startDate = startDate.plusDays(1);
+            }
         });
 
         return datesOccupied;

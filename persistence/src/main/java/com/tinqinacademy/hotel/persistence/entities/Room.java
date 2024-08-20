@@ -24,7 +24,7 @@ public class Room {
     @Column(nullable = false)
     private Integer floor;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private String number;
 
     @Column(nullable = false)

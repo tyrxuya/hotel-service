@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class RoomToGetRoomByIdOutputConverter extends AbstractConverter<Room, GetRoomByIdOutput> {
+public class RoomToGetRoomByIdOutput extends AbstractConverter<Room, GetRoomByIdOutput> {
     @Override
     protected Class<GetRoomByIdOutput> getTargetClass() {
         return GetRoomByIdOutput.class;
@@ -18,15 +18,15 @@ public class RoomToGetRoomByIdOutputConverter extends AbstractConverter<Room, Ge
 
     @Override
     protected GetRoomByIdOutput doConvert(Room source) {
-        List<BedSize> bedSizes = new ArrayList<>();
+        List<String> bedSizes = new ArrayList<>();
 
-        source.getBeds().forEach(bed -> bedSizes.add(BedSize.getBedSize(bed.getBedSize().getCode())));
+        source.getBeds().forEach(bed -> bedSizes.add(bed.getBedSize().getCode()));
 
         GetRoomByIdOutput result = GetRoomByIdOutput.builder()
-                .roomId(source.getId())
+                .roomId(source.getId().toString())
                 .price(source.getPrice())
                 .floor(source.getFloor())
-                .bathroomType(BathroomType.getBathroomType(source.getBathroomType().getCode()))
+                .bathroomType(source.getBathroomType().getCode())
                 .bedSizes(bedSizes)
                 .bedCount(bedSizes.size())
                 .build();

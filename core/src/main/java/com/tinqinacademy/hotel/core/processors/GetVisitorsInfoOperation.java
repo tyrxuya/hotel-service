@@ -6,6 +6,7 @@ import com.tinqinacademy.hotel.api.exceptions.InvalidInputException;
 import com.tinqinacademy.hotel.api.operations.getregisteredvisitors.GetRegisteredVisitorsInput;
 import com.tinqinacademy.hotel.api.operations.getregisteredvisitors.GetRegisteredVisitorsOutput;
 import com.tinqinacademy.hotel.api.operations.getregisteredvisitors.GetVisitorsInfo;
+import com.tinqinacademy.hotel.api.operations.getregisteredvisitors.VisitorInfo;
 import com.tinqinacademy.hotel.api.operations.hotelvisitor.HotelVisitorOutput;
 import com.tinqinacademy.hotel.persistence.entities.Guest;
 import com.tinqinacademy.hotel.persistence.repositories.GuestRepository;
@@ -29,7 +30,10 @@ import static io.vavr.API.*;
 public class GetVisitorsInfoOperation extends BaseOperation implements GetVisitorsInfo {
     private final GuestRepository guestRepository;
 
-    public GetVisitorsInfoOperation(Validator validator, ConversionService conversionService, ErrorMapper errorMapper, GuestRepository guestRepository) {
+    public GetVisitorsInfoOperation(Validator validator,
+                                    ConversionService conversionService,
+                                    ErrorMapper errorMapper,
+                                    GuestRepository guestRepository) {
         super(validator, conversionService, errorMapper);
         this.guestRepository = guestRepository;
     }
@@ -58,7 +62,7 @@ public class GetVisitorsInfoOperation extends BaseOperation implements GetVisito
                 .toEither()
                 .mapLeft(throwable -> Match(throwable).of(
                         validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        defaultCase(throwable, HttpStatus.I_AM_A_TEAPOT)
+                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
                 ));
     }
 
@@ -74,13 +78,15 @@ public class GetVisitorsInfoOperation extends BaseOperation implements GetVisito
     }
 
     private List<Guest> searchGuestsFromRepository(GetRegisteredVisitorsInput input) {
-        return guestRepository.searchGuests(input.getVisitor().getFirstName(),
-                input.getVisitor().getLastName(),
-                input.getVisitor().getPhoneNo(),
-                input.getVisitor().getBirthday(),
-                input.getVisitor().getCivilNumber(),
-                input.getVisitor().getIdIssueAuthority(),
-                input.getVisitor().getIdIssueDate(),
-                input.getVisitor().getIdValidity());
+        VisitorInfo visitor = input.getVisitor();
+
+        return guestRepository.searchGuests(visitor.getFirstName(),
+                visitor.getLastName(),
+                visitor.getPhoneNo(),
+                visitor.getBirthday(),
+                visitor.getCivilNumber(),
+                visitor.getIdIssueAuthority(),
+                visitor.getIdIssueDate(),
+                visitor.getIdValidity());
     }
 }

@@ -8,6 +8,7 @@ import com.tinqinacademy.hotel.api.exceptions.UserNotFoundException;
 import com.tinqinacademy.hotel.api.operations.deleteroom.DeleteRoomInput;
 import com.tinqinacademy.hotel.api.operations.deleteroom.DeleteRoom;
 import com.tinqinacademy.hotel.api.operations.deleteroom.DeleteRoomOutput;
+import com.tinqinacademy.hotel.persistence.entities.Room;
 import com.tinqinacademy.hotel.persistence.repositories.RoomRepository;
 import io.vavr.API;
 import io.vavr.control.Either;
@@ -28,7 +29,10 @@ import static io.vavr.API.*;
 public class DeleteRoomOperation extends BaseOperation implements DeleteRoom {
     private final RoomRepository roomRepository;
 
-    public DeleteRoomOperation(Validator validator, ConversionService conversionService, ErrorMapper errorMapper, RoomRepository roomRepository) {
+    public DeleteRoomOperation(Validator validator,
+                               ConversionService conversionService,
+                               ErrorMapper errorMapper,
+                               RoomRepository roomRepository) {
         super(validator, conversionService, errorMapper);
         this.roomRepository = roomRepository;
     }
@@ -40,10 +44,13 @@ public class DeleteRoomOperation extends BaseOperation implements DeleteRoom {
 
             validate(input);
 
-            roomRepository.deleteById(UUID.fromString(input.getRoomId()));
+            Room room = getRoomById(input);
+
+            roomRepository.delete(room);
+
             log.info("Room with id {} deleted from repository.", input.getRoomId());
 
-            DeleteRoomOutput result = DeleteRoomOutput.builder().build();
+            DeleteRoomOutput result = conversionService.convert(room, DeleteRoomOutput.class);
 
             log.info("End process method in DeleteRoomOperation. Result: {}", result);
 
@@ -52,7 +59,13 @@ public class DeleteRoomOperation extends BaseOperation implements DeleteRoom {
                 .toEither()
                 .mapLeft(throwable -> Match(throwable).of(
                         validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        defaultCase(throwable, HttpStatus.I_AM_A_TEAPOT)
+                        customCase(throwable, HttpStatus.NOT_FOUND, RoomNotFoundException.class),
+                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
                 ));
+    }
+
+    private Room getRoomById(DeleteRoomInput input) {
+        return roomRepository.findById(UUID.fromString(input.getRoomId()))
+                .orElseThrow(RoomNotFoundException::new);
     }
 }

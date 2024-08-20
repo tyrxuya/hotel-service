@@ -5,17 +5,19 @@ import com.tinqinacademy.hotel.api.base.OperationInput;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.validator.constraints.UUID;
 
 import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(toBuilder = true)
+@Builder
 @ToString
 @Getter
 @Setter
 public class BookRoomInput implements OperationInput {
     @JsonIgnore
+    @UUID(message = "roomId must be a valid UUID")
     private String roomId;
 
     @Schema(example = "2025-05-22")
@@ -42,5 +44,7 @@ public class BookRoomInput implements OperationInput {
     @Size(min = 10, max = 13, message = "phone number must be between 10 and 13 characters")
     private String phoneNo;
 
+    @NotBlank(message = "username cant be blank")
+    @Size(min = 2, max = 50, message = "lastName must be between 2 and 50 characters")
     private String username;
 }

@@ -35,7 +35,11 @@ public class RegisterVisitorOperation extends BaseOperation implements RegisterV
     private final BookingRepository bookingRepository;
     private final GuestRepository guestRepository;
 
-    public RegisterVisitorOperation(Validator validator, ConversionService conversionService, ErrorMapper errorMapper, BookingRepository bookingRepository, GuestRepository guestRepository) {
+    public RegisterVisitorOperation(Validator validator,
+                                    ConversionService conversionService,
+                                    ErrorMapper errorMapper,
+                                    BookingRepository bookingRepository,
+                                    GuestRepository guestRepository) {
         super(validator, conversionService, errorMapper);
         this.bookingRepository = bookingRepository;
         this.guestRepository = guestRepository;
@@ -62,7 +66,9 @@ public class RegisterVisitorOperation extends BaseOperation implements RegisterV
             bookingRepository.save(booking);
             log.info("Booking {} saved in repository.", booking);
 
-            RegisterVisitorOutput result = RegisterVisitorOutput.builder().build();
+            RegisterVisitorOutput result = RegisterVisitorOutput.builder()
+                    .visitorIds(getVisitorIds(guests))
+                    .build();
 
             log.info("End process method in BookRoomOperation. Result: {}", result);
 
@@ -71,9 +77,16 @@ public class RegisterVisitorOperation extends BaseOperation implements RegisterV
                 .toEither()
                 .mapLeft(throwable -> Match(throwable).of(
                         customCase(throwable, HttpStatus.NOT_FOUND, BookingNotFoundException.class),
-                        validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        defaultCase(throwable, HttpStatus.I_AM_A_TEAPOT)
+                        validateCase(throwable, HttpStatus.BAD_REQUEST)
                 ));
+    }
+
+    private List<String> getVisitorIds(List<Guest> guests) {
+        List<String> visitorIds = new ArrayList<>();
+
+        guests.forEach(guest -> visitorIds.add(guest.getId().toString()));
+
+        return visitorIds;
     }
 
     private Booking getBookingFromRepository(RegisterVisitorInput input) {

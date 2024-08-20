@@ -36,7 +36,6 @@ public class HotelController extends BaseController {
     private final GetRoomInfo getRoomInfoOperation;
     private final UnbookRoom unbookRoomOperation;
     private final BookRoom bookRoomOperation;
-    private final ObjectMapper objectMapper;
 
     @GetMapping(HotelRestApiPaths.CHECK_ROOM)
     @Operation(
@@ -44,8 +43,9 @@ public class HotelController extends BaseController {
             description = "Checks whether a room is available for a certain period."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "ok"),
-            @ApiResponse(responseCode = "400", description = "bad request")
+            @ApiResponse(responseCode = "200", description = "Room is found"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "404", description = "Room not found")
     })
     public ResponseEntity<?> checkRoomAvailability(@RequestParam(required = false) @Schema(example = "2021-05-22") LocalDate startDate,
                                                    @RequestParam(required = false) @Schema(example = "2021-05-25") LocalDate endDate,
@@ -70,8 +70,9 @@ public class HotelController extends BaseController {
             description = "Returns basic info for a room with a specified id."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "ok"),
-            @ApiResponse(responseCode = "400", description = "bad request")
+            @ApiResponse(responseCode = "200", description = "Room found"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "404", description = "Room not found")
     })
     public ResponseEntity<?> getRoomInfo(@PathVariable @Schema(example = "15") String roomId) {
         GetRoomByIdInput input = GetRoomByIdInput.builder()
@@ -88,9 +89,9 @@ public class HotelController extends BaseController {
             description = "Books the room specified."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "ok"),
-            @ApiResponse(responseCode = "400", description = "bad request"),
-            @ApiResponse(responseCode = "403", description = "forbidden")
+            @ApiResponse(responseCode = "200", description = "Room booked successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "404", description = "Room not found")
     })
     public ResponseEntity<?> bookRoom(@PathVariable @Schema(example = "15") String roomId,
                                       @RequestBody BookRoomInput input) {
@@ -106,9 +107,9 @@ public class HotelController extends BaseController {
             description = "Unbooks a room that the user has already been booked."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "ok"),
-            @ApiResponse(responseCode = "400", description = "bad request"),
-            @ApiResponse(responseCode = "403", description = "forbidden")
+            @ApiResponse(responseCode = "200", description = "Room unbooked successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "404", description = "Booking not found")
     })
     public ResponseEntity<?> unbookRoom(@PathVariable @Schema(example = "15") String bookingId) {
         UnbookRoomInput input = UnbookRoomInput.builder()
