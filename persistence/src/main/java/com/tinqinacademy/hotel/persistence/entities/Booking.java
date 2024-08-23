@@ -27,9 +27,8 @@ public class Booking {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(nullable = false)
+    private UUID userId;
 
     @Column(nullable = false)
     private LocalDate startDate;
