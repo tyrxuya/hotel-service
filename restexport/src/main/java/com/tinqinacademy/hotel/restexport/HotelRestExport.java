@@ -6,13 +6,9 @@ import com.tinqinacademy.hotel.api.operations.bookroom.BookRoomOutput;
 import com.tinqinacademy.hotel.api.operations.checkrooms.CheckRoomsOutput;
 import com.tinqinacademy.hotel.api.operations.createroom.CreateRoomInput;
 import com.tinqinacademy.hotel.api.operations.createroom.CreateRoomOutput;
-import com.tinqinacademy.hotel.api.operations.createuser.CreateUserInput;
-import com.tinqinacademy.hotel.api.operations.createuser.CreateUserOutput;
 import com.tinqinacademy.hotel.api.operations.deleteroom.DeleteRoomOutput;
-import com.tinqinacademy.hotel.api.operations.deleteuser.DeleteUserOutput;
 import com.tinqinacademy.hotel.api.operations.getregisteredvisitors.GetRegisteredVisitorsOutput;
 import com.tinqinacademy.hotel.api.operations.getroombyid.GetRoomByIdOutput;
-import com.tinqinacademy.hotel.api.operations.getuser.GetUserOutput;
 import com.tinqinacademy.hotel.api.operations.partialupdateroom.PartialUpdateRoomInput;
 import com.tinqinacademy.hotel.api.operations.partialupdateroom.PartialUpdateRoomOutput;
 import com.tinqinacademy.hotel.api.operations.registervisitor.RegisterVisitorInput;
@@ -74,13 +70,4 @@ public interface HotelRestExport {
 
     @RequestLine(HotelFeignClientApiPaths.DELETE_ROOM)
     DeleteRoomOutput deleteRoom(@Param String roomId);
-
-    @RequestLine(HotelFeignClientApiPaths.CREATE_USER)
-    CreateUserOutput createUser(CreateUserInput input);
-
-    @RequestLine(HotelFeignClientApiPaths.DELETE_USER)
-    DeleteUserOutput deleteUser(@Param String userId);
-
-    @RequestLine(HotelFeignClientApiPaths.GET_USER)
-    GetUserOutput getUser(@Param String userId);
 }
