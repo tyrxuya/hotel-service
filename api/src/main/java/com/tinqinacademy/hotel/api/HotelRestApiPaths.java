@@ -24,8 +24,4 @@ public final class HotelRestApiPaths {
     public static final String UPDATE_ROOM = SYSTEM + ROOM + ROOMID;
     public static final String PARTIAL_UPDATE_ROOM = SYSTEM + ROOM + ROOMID;
     public static final String DELETE_ROOM = SYSTEM + ROOM + ROOMID;
-
-    public static final String DELETE_USER = USER + USERID;
-    public static final String GET_USER = USER + USERID;
-    public static final String CREATE_USER = USER;
 }

@@ -67,6 +67,10 @@ services:
     platform: linux/x86_64
     build: ../hotel
     restart: on-failure
+    environment:
+      - SERVER_ADDRESS=hotel-service
+      - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8085/api/v1/admin
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://hotel_db:5432/hotel?useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicKeyRetrieval=true
     ports:
       - "1235:8081"
     stdin_open: true
@@ -85,6 +89,10 @@ services:
     platform: linux/x86_64
     build: ../comments
     restart: on-failure
+    environment:
+      - SERVER_ADDRESS=comments-service
+      - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8085/api/v1/admin
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://hotel_db:5432/comments?useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicKeyRetrieval=true
     ports:
       - "1236:8082"
     stdin_open: true
@@ -104,6 +112,9 @@ services:
     platform: linux/x86_64
     build: ../email
     restart: on-failure
+    environment:
+      - SERVER_ADDRESS=email-service
+      - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8085/api/v1/admin
     ports:
       - "1237:8086"
     stdin_open: true
@@ -124,6 +135,11 @@ services:
     platform: linux/x86_64
     build: ../authentication
     restart: on-failure
+    environment:
+      - SERVER_ADDRESS=auth-service
+      - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8085/api/v1/admin
+      - EMAIL_CLIENT_URL=http://email-service:8086/
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://hotel_db:5432/authentication?useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicKeyRetrieval=true
     ports:
       - "1238:8083"
     stdin_open: true
@@ -145,6 +161,12 @@ services:
     platform: linux/x86_64
     build: ../bff
     restart: on-failure
+    environment:
+      - SERVER_ADDRESS=bff-service
+      - SPRING_BOOT_ADMIN_CLIENT_URL=http://admin-service:8085/api/v1/admin
+      - HOTEL_CLIENT_URL=http://hotel-service:8081
+      - COMMENTS_CLIENT_URL=http://comments-service:8082
+      - AUTH_CLIENT_URL=http://auth-service:8083
     ports:
       - "1239:8084"
     stdin_open: true

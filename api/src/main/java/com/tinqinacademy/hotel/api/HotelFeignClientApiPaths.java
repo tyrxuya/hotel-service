@@ -22,7 +22,4 @@ public final class HotelFeignClientApiPaths {
     public static final String UPDATE_ROOM = PUT + SPACE_SYMBOL + HotelRestApiPaths.UPDATE_ROOM;
     public static final String PARTIAL_UPDATE_ROOM = PATCH + SPACE_SYMBOL + HotelRestApiPaths.PARTIAL_UPDATE_ROOM;
     public static final String DELETE_ROOM = DELETE + SPACE_SYMBOL + HotelRestApiPaths.DELETE_ROOM;
-    public static final String CREATE_USER = POST + SPACE_SYMBOL + HotelRestApiPaths.CREATE_USER;
-    public static final String DELETE_USER = DELETE + SPACE_SYMBOL + HotelRestApiPaths.DELETE_USER;
-    public static final String GET_USER = GET + SPACE_SYMBOL + HotelRestApiPaths.GET_USER;
 }
