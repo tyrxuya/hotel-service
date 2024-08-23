@@ -12,8 +12,6 @@ public class WebConfig implements WebMvcConfigurer {
     private final CreateRoomInputToRoom createRoomInputToRoom;
     private final GuestToHotelVisitorOutput guestToHotelVisitorOutput;
     private final RoomToGetRoomByIdOutput roomToGetRoomByIdOutputConverter;
-    private final CreateUserInputToUser createUserInputToUser;
-    private final UserToGetUserOutput userToGetUserOutput;
     private final HotelVisitorInputToGuest hotelVisitorInputToGuest;
     private final RoomToDeleteRoomOutput roomToDeleteRoomOutput;
 
@@ -22,8 +20,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addConverter(createRoomInputToRoom);
         registry.addConverter(guestToHotelVisitorOutput);
         registry.addConverter(roomToGetRoomByIdOutputConverter);
-        registry.addConverter(createUserInputToUser);
-        registry.addConverter(userToGetUserOutput);
         registry.addConverter(hotelVisitorInputToGuest);
         registry.addConverter(roomToDeleteRoomOutput);
     }
