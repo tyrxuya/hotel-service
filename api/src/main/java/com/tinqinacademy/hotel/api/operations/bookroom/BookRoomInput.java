@@ -44,7 +44,7 @@ public class BookRoomInput implements OperationInput {
     @Size(min = 10, max = 13, message = "phone number must be between 10 and 13 characters")
     private String phoneNo;
 
-    @NotBlank(message = "username cant be blank")
-    @Size(min = 2, max = 50, message = "lastName must be between 2 and 50 characters")
-    private String username;
+    @NotBlank(message = "userId cant be blank")
+    @UUID(message = "userId must be a valid UUID")
+    private String userId;
 }
