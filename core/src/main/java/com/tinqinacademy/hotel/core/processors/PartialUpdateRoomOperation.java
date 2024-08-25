@@ -74,8 +74,7 @@ public class PartialUpdateRoomOperation extends BaseOperation implements Partial
                 .mapLeft(throwable -> Match(throwable).of(
                         customCase(throwable, HttpStatus.NOT_FOUND, BedNotFoundException.class),
                         customCase(throwable, HttpStatus.NOT_FOUND, RoomNotFoundException.class),
-                        validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
+                        validateCase(throwable, HttpStatus.BAD_REQUEST)
                 ));
     }
 
@@ -84,7 +83,7 @@ public class PartialUpdateRoomOperation extends BaseOperation implements Partial
                 .ifPresent(room::setNumber);
 
         Optional.ofNullable(input.getBathroomType())
-                .ifPresent(bathroomType -> room.setBathroomType(BathroomType.valueOf(bathroomType)));
+                .ifPresent(bathroomType -> room.setBathroomType(BathroomType.getBathroomType(bathroomType)));
 
         Optional.ofNullable(input.getFloor())
                 .ifPresent(room::setFloor);
