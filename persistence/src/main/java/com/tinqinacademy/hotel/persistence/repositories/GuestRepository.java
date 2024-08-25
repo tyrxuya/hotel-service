@@ -1,5 +1,6 @@
 package com.tinqinacademy.hotel.persistence.repositories;
 
+import com.tinqinacademy.hotel.persistence.entities.Booking;
 import com.tinqinacademy.hotel.persistence.entities.Guest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,22 +15,23 @@ public interface GuestRepository extends JpaRepository<Guest, UUID> {
     //void saveAll(List<Guest> guests);
 
     @Query(value = """
-                SELECT g FROM Guest g
-                WHERE (:firstName IS NULL OR g.firstName = :firstName)
-                AND (:lastName IS NULL OR g.lastName = :lastName)
-                AND (:phone IS NULL OR g.phone = :phone)
-                AND (:birthday IS NULL OR g.birthday = :birthday)
+                SELECT b FROM Booking b
+                JOIN b.guests g
+                WHERE (:roomNo IS NULL OR b.room.number = :roomNo)
+                AND (:firstName IS NULL OR g.firstName LIKE :firstName)
+                AND (:lastName IS NULL OR g.lastName LIKE :lastName)
+                AND (:phoneNo IS NULL OR g.phone = :phoneNo)
                 AND (:civilNumber IS NULL OR g.civilNumber = :civilNumber)
+                AND (CAST(:birthday AS DATE) IS NULL OR g.birthday = :birthday)
                 AND (:idIssueAuthority IS NULL OR g.idIssueAuthority = :idIssueAuthority)
-                AND (:idIssueDate IS NULL OR g.idIssueDate = :idIssueDate)
-                AND (:idValidity IS NULL OR g.idValidity = :idValidity)
+                AND (CAST(:idIssueDate AS DATE) IS NULL OR g.idIssueDate = :idIssueDate)
                 """)
-    List<Guest> searchGuests(String firstName,
-                             String lastName,
-                             String phone,
-                             LocalDate birthday,
-                             String civilNumber,
-                             String idIssueAuthority,
-                             LocalDate idIssueDate,
-                             LocalDate idValidity);
+    List<Booking> searchGuests(String roomNo,
+                               String firstName,
+                               String lastName,
+                               String phoneNo,
+                               String civilNumber,
+                               LocalDate birthday,
+                               String idIssueAuthority,
+                               LocalDate idIssueDate);
 }
