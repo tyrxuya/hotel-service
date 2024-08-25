@@ -13,6 +13,7 @@ import com.tinqinacademy.hotel.api.operations.partialupdateroom.PartialUpdateRoo
 import com.tinqinacademy.hotel.api.operations.partialupdateroom.PartialUpdateRoomOutput;
 import com.tinqinacademy.hotel.api.operations.registervisitor.RegisterVisitorInput;
 import com.tinqinacademy.hotel.api.operations.registervisitor.RegisterVisitorOutput;
+import com.tinqinacademy.hotel.api.operations.unbookroom.UnbookRoomInput;
 import com.tinqinacademy.hotel.api.operations.unbookroom.UnbookRoomOutput;
 import com.tinqinacademy.hotel.api.operations.updateroom.UpdateRoomInput;
 import com.tinqinacademy.hotel.api.operations.updateroom.UpdateRoomOutput;
@@ -25,7 +26,7 @@ import java.time.LocalDate;
 @Headers({
         "Content-Type: application/json"
 })
-public interface HotelRestExport {
+public interface HotelClient {
     @RequestLine(HotelFeignClientApiPaths.CHECK_ROOMS)
     CheckRoomsOutput checkRooms(@Param LocalDate startDate,
                                 @Param LocalDate endDate,
@@ -41,7 +42,8 @@ public interface HotelRestExport {
                             BookRoomInput input);
 
     @RequestLine(HotelFeignClientApiPaths.UNBOOK_ROOM)
-    UnbookRoomOutput unbookRoom(@Param String bookingId);
+    UnbookRoomOutput unbookRoom(@Param String bookingId,
+                                UnbookRoomInput input);
 
     @RequestLine(HotelFeignClientApiPaths.REGISTER_VISITOR)
     RegisterVisitorOutput registerVisitor(@Param String bookingId,
