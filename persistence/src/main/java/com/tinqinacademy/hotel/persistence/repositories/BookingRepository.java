@@ -46,4 +46,15 @@ public interface BookingRepository extends JpaRepository<Booking, UUID>, Booking
     )
     List<UUID> searchRooms(LocalDate from,
                            LocalDate to);
+
+    @Query(value = """
+    SELECT COUNT(b) FROM Booking b
+    WHERE (b.room.id = :roomId)
+    AND (b.startDate = CAST(:startDate AS DATE) AND b.endDate = CAST(:endDate AS DATE))
+    OR (b.startDate BETWEEN CAST(:startDate AS DATE) AND CAST(:endDate AS DATE))
+    OR (b.endDate BETWEEN CAST(:startDate AS DATE) AND CAST(:endDate AS DATE))
+    """)
+    Long countByRoomAndDates(UUID roomId, LocalDate startDate, LocalDate endDate);
+
+    Optional<Booking> findByIdAndUserId(UUID id, UUID userId);
 }

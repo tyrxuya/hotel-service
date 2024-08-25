@@ -38,7 +38,7 @@ public class UpdateRoomInput implements OperationInput {
     @NotBlank(message = "room number can't be blank")
     private String roomNo;
 
-    @Schema(example = "1838124.15")
+    @Schema(example = "205.15")
     //@Positive(message = "price cannot be negative")
     @DecimalMin(value = "200", message = "price cannot be lower than 200")
     @Digits(integer = 4, fraction = 2, message = "invalid price decimal")

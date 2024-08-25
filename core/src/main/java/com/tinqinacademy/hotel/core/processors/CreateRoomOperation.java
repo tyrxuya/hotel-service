@@ -72,8 +72,7 @@ public class CreateRoomOperation extends BaseOperation implements CreateRoom {
                 .toEither()
                 .mapLeft(throwable -> Match(throwable).of(
                         customCase(throwable, HttpStatus.NOT_FOUND, BedNotFoundException.class),
-                        validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
+                        validateCase(throwable, HttpStatus.BAD_REQUEST)
                 ));
     }
 

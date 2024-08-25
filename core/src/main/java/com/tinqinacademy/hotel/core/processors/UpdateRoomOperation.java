@@ -78,8 +78,7 @@ public class UpdateRoomOperation extends BaseOperation implements UpdateRoom {
                 .mapLeft(throwable -> Match(throwable).of(
                         customCase(throwable, HttpStatus.NOT_FOUND, BedNotFoundException.class),
                         customCase(throwable, HttpStatus.NOT_FOUND, RoomNotFoundException.class),
-                        validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
+                        validateCase(throwable, HttpStatus.BAD_REQUEST)
                 ));
     }
 

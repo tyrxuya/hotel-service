@@ -72,8 +72,7 @@ public class BookRoomOperation extends BaseOperation implements BookRoom {
                 .mapLeft(throwable -> Match(throwable).of(
                         customCase(throwable, HttpStatus.NOT_FOUND, RoomNotFoundException.class),
                         customCase(throwable, HttpStatus.NOT_FOUND, UserNotFoundException.class),
-                        validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
+                        validateCase(throwable, HttpStatus.BAD_REQUEST)
                 ));
     }
 
@@ -98,11 +97,12 @@ public class BookRoomOperation extends BaseOperation implements BookRoom {
     }
 
     private void checkIsRoomPresent(BookRoomInput input) {
-        Boolean present = bookingRepository.searchRooms(input.getStartDate(), input.getEndDate())
-                .stream()
-                .anyMatch(id -> UUID.fromString(input.getRoomId()).equals(id));
+//        Boolean present = bookingRepository.searchRooms(input.getStartDate(), input.getEndDate())
+//                .stream()
+//                .anyMatch(id -> UUID.fromString(input.getRoomId()).equals(id));
+        long count = bookingRepository.countByRoomAndDates(UUID.fromString(input.getRoomId()), input.getStartDate(), input.getEndDate());
 
-        if (present) {
+        if (count > 0) {
             throw new RoomNotFoundException();
         }
     }

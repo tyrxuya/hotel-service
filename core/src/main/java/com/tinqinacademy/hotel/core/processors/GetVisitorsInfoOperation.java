@@ -61,8 +61,7 @@ public class GetVisitorsInfoOperation extends BaseOperation implements GetVisito
         })
                 .toEither()
                 .mapLeft(throwable -> Match(throwable).of(
-                        validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
+                        validateCase(throwable, HttpStatus.BAD_REQUEST)
                 ));
     }
 
@@ -80,13 +79,20 @@ public class GetVisitorsInfoOperation extends BaseOperation implements GetVisito
     private List<Guest> searchGuestsFromRepository(GetRegisteredVisitorsInput input) {
         VisitorInfo visitor = input.getVisitor();
 
-        return guestRepository.searchGuests(visitor.getFirstName(),
+        List<Guest> guests = new ArrayList<>();
+
+        guestRepository.searchGuests(
+                input.getRoomNo(),
+                visitor.getFirstName(),
                 visitor.getLastName(),
                 visitor.getPhoneNo(),
-                visitor.getBirthday(),
                 visitor.getCivilNumber(),
+                visitor.getBirthday(),
                 visitor.getIdIssueAuthority(),
-                visitor.getIdIssueDate(),
-                visitor.getIdValidity());
+                visitor.getIdIssueDate()
+        )
+                .forEach(booking -> guests.addAll(booking.getGuests()));
+
+        return guests;
     }
 }

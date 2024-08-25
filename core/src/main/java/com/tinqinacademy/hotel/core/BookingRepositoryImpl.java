@@ -53,11 +53,11 @@ public class BookingRepositoryImpl implements BookingRepositoryCustom {
             ));
         }
 
-        if (!bedSize.equals(BedSize.UNKNOWN)) {
+        if (bedSize != null && !bedSize.equals(BedSize.UNKNOWN)) {
             predicates.add(cb.equal(root.get("room").get("beds").get("bedSize"), bedSize));
         }
 
-        if (!bathroomType.equals(BathroomType.UNKNOWN)) {
+        if (bathroomType != null && !bathroomType.equals(BathroomType.UNKNOWN)) {
             predicates.add(cb.equal(root.get("room").get("bathroomType"), bathroomType));
         }
 

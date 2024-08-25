@@ -57,8 +57,7 @@ public class CheckRoomAvailabilityOperation extends BaseOperation implements Che
                 .toEither()
                 .mapLeft(throwable -> Match(throwable).of(
                         validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        customCase(throwable, HttpStatus.NOT_FOUND, RoomNotFoundException.class),
-                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
+                        customCase(throwable, HttpStatus.NOT_FOUND, RoomNotFoundException.class)
                 ));
     }
 

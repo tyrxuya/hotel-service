@@ -111,10 +111,9 @@ public class HotelController extends BaseController {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "404", description = "Booking not found")
     })
-    public ResponseEntity<?> unbookRoom(@PathVariable @Schema(example = "15") String bookingId) {
-        UnbookRoomInput input = UnbookRoomInput.builder()
-                .bookingId(bookingId)
-                .build();
+    public ResponseEntity<?> unbookRoom(@PathVariable @Schema(example = "15") String bookingId,
+                                        @RequestBody UnbookRoomInput input) {
+        input.setBookingId(bookingId);
 
         Either<ErrorOutput, UnbookRoomOutput> result = unbookRoomOperation.process(input);
         return getOutput(result, HttpStatus.OK);

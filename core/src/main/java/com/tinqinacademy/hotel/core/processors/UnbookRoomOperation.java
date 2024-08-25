@@ -60,13 +60,14 @@ public class UnbookRoomOperation extends BaseOperation implements UnbookRoom {
                 .toEither()
                 .mapLeft(throwable -> Match(throwable).of(
                         validateCase(throwable, HttpStatus.BAD_REQUEST),
-                        customCase(throwable, HttpStatus.NOT_FOUND, BookingNotFoundException.class),
-                        defaultCase(throwable, HttpStatus.INTERNAL_SERVER_ERROR)
+                        customCase(throwable, HttpStatus.NOT_FOUND, BookingNotFoundException.class)
                 ));
     }
 
     private Booking getBookingByInput(UnbookRoomInput input) {
-        return bookingRepository.findById(UUID.fromString(input.getBookingId()))
+        UUID id = UUID.fromString(input.getBookingId());
+        UUID userId = UUID.fromString(input.getUserId());
+        return bookingRepository.findByIdAndUserId(id, userId)
                 .orElseThrow(BookingNotFoundException::new);
     }
 }
