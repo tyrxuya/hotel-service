@@ -20,9 +20,11 @@ public class GuestToHotelVisitorOutput extends AbstractConverter<Guest, HotelVis
                 .firstName(source.getFirstName())
                 .lastName(source.getLastName())
                 .phoneNo(source.getPhone())
-                .idNo(source.getCivilNumber())
+                .birthday(source.getBirthday())
+                .civilNumber(source.getCivilNumber())
                 .idIssueAuthority(source.getIdIssueAuthority())
                 .idIssueDate(source.getIdIssueDate())
+                .idValidity(source.getIdValidity())
                 .build();
 
         return result;
